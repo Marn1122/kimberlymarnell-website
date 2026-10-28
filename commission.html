@@ -1,0 +1,579 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Commission a Painting</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap">
+<style>
+/* Layout: a five-step order form on the left, a live price ticket on the right that follows you down the page.
+   Same tokens as the main site (dark first, light supported). */
+:root{
+  --bg:#0a0a0c; --surface:#141418; --surface2:#1b1b21; --line:#26262c; --fg:#f3f1ee; --muted:#9a98a3;
+  --glow-a:#3b1fd1; --glow-b:#d9361e; --accent:#f2c14e; --ok:#7bd88f; --warn:#f2a54e;
+  --display:"Geist","Helvetica Neue",Arial,sans-serif; --serif:"Instrument Serif","Iowan Old Style",Georgia,serif;
+  --radius:18px; color-scheme:dark;
+}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){
+  --bg:#f6f4f1; --surface:#ffffff; --surface2:#f0ede8; --line:#e3e0db; --fg:#141317; --muted:#6c6a73; --glow-a:#6c5cff; --glow-b:#ff6a4d; --accent:#a8780a; --ok:#1f8a3b; --warn:#b5650d; color-scheme:light}}
+:root[data-theme="light"]{--bg:#f6f4f1; --surface:#ffffff; --surface2:#f0ede8; --line:#e3e0db; --fg:#141317; --muted:#6c6a73; --glow-a:#6c5cff; --glow-b:#ff6a4d; --accent:#a8780a; --ok:#1f8a3b; --warn:#b5650d; color-scheme:light}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--display);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+[hidden]{display:none!important}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-block:20px}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border:1px solid var(--line);border-radius:999px;text-decoration:none;font-size:14px;font-weight:500;background:color-mix(in srgb,var(--surface) 70%,transparent)}
+header.hero{position:relative;isolation:isolate;padding-block:36px 28px}
+header.hero::before{content:"";position:absolute;z-index:-1;left:-15%;top:-60%;width:60%;aspect-ratio:1;
+  background:radial-gradient(circle at 45% 55%,var(--glow-a) 0%,transparent 55%),radial-gradient(circle at 25% 85%,var(--glow-b) 0%,transparent 45%);filter:blur(70px);opacity:.4}
+.eyebrow{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 14px}
+h1{font-size:clamp(40px,6vw,80px);line-height:.95;letter-spacing:-.045em;font-weight:500;margin:0;text-wrap:balance;max-width:16ch}
+h1 em,h2 em{font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing:-.01em}
+.lede{color:var(--muted);max-width:58ch;margin:18px 0 0;font-size:18px}
+
+/* how it works */
+.how{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin-block:28px 40px;padding:0}
+.how li{list-style:none;background:var(--surface);padding:16px 16px 18px;display:grid;gap:4px;min-width:0}
+.how .n{font-size:12px;color:var(--accent);font-variant-numeric:tabular-nums;letter-spacing:.06em}
+.how b{font-weight:500;font-size:15px}
+.how span{color:var(--muted);font-size:13.5px;line-height:1.45}
+
+/* layout */
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:32px;align-items:start;padding-bottom:80px}
+.steps-nav{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+.steps-nav button{border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:999px;padding:7px 13px;font:inherit;font-size:13.5px;cursor:pointer}
+.steps-nav button[aria-current="step"]{color:var(--bg);background:var(--fg);border-color:var(--fg)}
+.steps-nav button.done{color:var(--fg)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:30px;display:grid;gap:24px;min-width:0}
+.card h2{margin:0;font-size:clamp(28px,3.2vw,40px);line-height:1.05;letter-spacing:-.03em;font-weight:500}
+.card .sub{margin:-14px 0 0;color:var(--muted)}
+fieldset{border:0;margin:0;padding:0;display:grid;gap:12px;min-width:0}
+legend{font-weight:500;margin-bottom:10px;padding:0;font-size:16px}
+.hint{font-size:13.5px;color:var(--muted);margin:0}
+.opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.opt{position:relative}
+.opt input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.opt label{display:grid;gap:3px;height:100%;padding:14px 14px;border:1px solid var(--line);border-radius:14px;cursor:pointer;background:var(--surface2);transition:border-color .15s,background .15s}
+.opt label b{font-weight:500}
+.opt label span{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.opt input:checked + label{border-color:var(--fg);background:color-mix(in srgb,var(--fg) 7%,var(--surface2))}
+.opt input:focus-visible + label{outline:2px solid var(--accent);outline-offset:2px}
+.sizes{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}
+.size-box{display:block;border:1.5px solid var(--muted);border-radius:2px;margin:2px 0 8px;opacity:.7}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.row3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px}
+.field{display:grid;gap:6px;min-width:0}
+.field label{font-size:14px;font-weight:500}
+input[type=text],input[type=email],input[type=tel],input[type=date],select,textarea{width:100%;font:inherit;color:var(--fg);background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+textarea{min-height:110px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--fg)}
+.stepper{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;overflow:hidden;width:max-content}
+.stepper button{width:44px;height:44px;border:0;background:var(--surface2);color:var(--fg);font-size:20px;cursor:pointer}
+.stepper output{min-width:56px;text-align:center;font-weight:500;font-variant-numeric:tabular-nums}
+
+.drop{border:1.5px dashed var(--line);border-radius:16px;padding:26px;text-align:center;display:grid;gap:8px;place-items:center;background:var(--surface2);cursor:pointer;transition:border-color .15s}
+.drop.over{border-color:var(--fg)}
+.drop b{font-weight:500}
+.thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.thumb{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface2);display:grid}
+.thumb img{width:100%;aspect-ratio:1;object-fit:cover;display:block}
+.thumb .q{font-size:12px;padding:8px 10px;display:flex;justify-content:space-between;gap:6px;align-items:center}
+.thumb .q .good{color:var(--ok)} .thumb .q .low{color:var(--warn)}
+.thumb button{border:0;background:transparent;color:var(--muted);cursor:pointer;font:inherit;font-size:12px;text-decoration:underline}
+.tips{display:grid;grid-template-columns:repeat(2,1fr);gap:8px 20px;margin:0;padding:0;list-style:none;font-size:13.5px;color:var(--muted)}
+.tips li::before{content:"✓ ";color:var(--ok)}
+
+.nav{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding-top:4px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 22px;border-radius:999px;text-decoration:none;font:inherit;font-weight:500;font-size:15px;border:1px solid var(--line);background:transparent;color:var(--fg);cursor:pointer;transition:transform .2s}
+.btn:hover{transform:translateY(-1px)}
+.btn.solid{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.err{color:var(--warn);font-size:14px;margin:0}
+
+/* price ticket */
+.ticket{position:sticky;top:20px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px;display:grid;gap:14px}
+.ticket .k{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.ticket .sum{font-family:var(--serif);font-size:24px;line-height:1.15}
+.lines{display:grid;gap:8px;font-size:14px;margin:0;padding:12px 0;border-block:1px solid var(--line)}
+.lines div{display:flex;justify-content:space-between;gap:12px}
+.lines dt{color:var(--muted)} .lines dd{margin:0;font-variant-numeric:tabular-nums;text-align:right}
+.total{display:flex;justify-content:space-between;align-items:baseline}
+.total b{font-size:34px;font-weight:500;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.dep{display:grid;gap:6px;font-size:14px;background:var(--surface2);border-radius:12px;padding:12px 14px}
+.dep div{display:flex;justify-content:space-between;font-variant-numeric:tabular-nums}
+.dep div:first-child b{color:var(--accent)}
+.fine{font-size:12.5px;color:var(--muted);margin:0}
+
+/* review / done */
+.review{display:grid;gap:10px;font-size:14.5px}
+.review div{display:grid;grid-template-columns:160px minmax(0,1fr);gap:12px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.review dt{color:var(--muted)} .review dd{margin:0;overflow-wrap:anywhere}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:14.5px}
+.check input{margin-top:4px;width:18px;height:18px;accent-color:var(--fg)}
+.done-steps{display:grid;gap:14px;margin:0;padding:0;list-style:none;counter-reset:d}
+.done-steps li{display:grid;grid-template-columns:36px minmax(0,1fr);gap:14px;align-items:start;background:var(--surface2);border:1px solid var(--line);border-radius:14px;padding:16px}
+.done-steps li::before{counter-increment:d;content:counter(d);width:32px;height:32px;border-radius:999px;display:grid;place-items:center;background:var(--fg);color:var(--bg);font-weight:600}
+.done-steps h3{margin:2px 0 6px;font-size:17px;font-weight:500}
+.done-steps p{margin:0 0 10px;color:var(--muted);font-size:14.5px}
+.mail code{font-family:var(--display);font-size:16px;padding:9px 14px;border:1px solid var(--line);border-radius:999px;user-select:all;overflow-wrap:anywhere;display:inline-block;max-width:100%}
+.acts{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.order-id{font-variant-numeric:tabular-nums;color:var(--accent);font-weight:500}
+
+@media (max-width:980px){
+  .layout{grid-template-columns:minmax(0,1fr)}
+  .ticket{position:static;order:2}
+  .how{grid-template-columns:repeat(3,1fr)}
+}
+@media (max-width:620px){
+  .how{grid-template-columns:repeat(2,1fr)}
+  .card{padding:20px}
+  .row2,.row3{grid-template-columns:1fr}
+  .tips{grid-template-columns:1fr}
+  .review div{grid-template-columns:1fr;gap:2px}
+  .mobile-bar{position:fixed;z-index:20;left:0;right:0;bottom:0;padding:10px max(16px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));
+    background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px}
+  body{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+}
+@media (min-width:621px){.mobile-bar{display:none}}
+.mobile-bar b{font-size:20px;font-variant-numeric:tabular-nums}
+.mobile-bar span{font-size:12px;color:var(--muted);display:block}
+/* paintbrush cursor: drawn by the operating system, so it moves at full native speed with no lag */
+@media (hover:hover) and (pointer:fine){
+  html{cursor:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2232%22 height=%2232%22 viewBox=%220 0 64 64%22%3E%3Cg transform=%22translate(26.2 37.8) rotate(45)%22 stroke-linejoin=%22round%22%3E%3Cg stroke=%22#ffffff%22 stroke-width=%225%22 fill=%22#ffffff%22%3E%3Cpath d=%22M-3.2,-40 Q0,-42.5 3.2,-40 L4.6,4 L-4.6,4 Z%22/%3E%3Crect x=%22-5.6%22 y=%223%22 width=%2211.2%22 height=%2211%22 rx=%221.6%22/%3E%3Cpath d=%22M-5.8,14 C-6.6,19 -4.4,25 0,31 C4.4,25 6.6,19 5.8,14 Z%22/%3E%3C/g%3E%3Cg stroke=%22#141317%22 stroke-width=%222.2%22 fill=%22#141317%22%3E%3Cpath d=%22M-3.2,-40 Q0,-42.5 3.2,-40 L4.6,4 L-4.6,4 Z%22/%3E%3Crect x=%22-5.6%22 y=%223%22 width=%2211.2%22 height=%2211%22 rx=%221.6%22/%3E%3Cpath d=%22M-5.8,14 C-6.6,19 -4.4,25 0,31 C4.4,25 6.6,19 5.8,14 Z%22/%3E%3C/g%3E%3Cpath d=%22M-3.2,-40 Q0,-42.5 3.2,-40 L4.6,4 L-4.6,4 Z%22 fill=%22#2a1f5c%22/%3E%3Cpath d=%22M-1.4,-38.5 L-1.9,2%22 stroke=%22#6f5bd8%22 stroke-width=%221.6%22 stroke-linecap=%22round%22 fill=%22none%22/%3E%3Crect x=%22-5.6%22 y=%223%22 width=%2211.2%22 height=%2211%22 rx=%221.6%22 fill=%22#e9c46a%22/%3E%3Cpath d=%22M-5.4,6.6 H5.4 M-5.4,10.4 H5.4%22 stroke=%22#b8891f%22 stroke-width=%221.2%22/%3E%3Cpath d=%22M-5.8,14 C-6.6,19 -4.4,25 0,31 C4.4,25 6.6,19 5.8,14 Z%22 fill=%22#f4ecdd%22/%3E%3Cpath d=%22M-6.1,19.5 C-5.2,23.5 -2.8,27.5 0,31 C2.8,27.5 5.2,23.5 6.1,19.5 C3.6,21.2 1.6,19.4 0,20.8 C-1.8,22.2 -4,19.6 -6.1,19.5 Z%22 fill=%22#7b61ff%22/%3E%3Cellipse cx=%22-2.1%22 cy=%2223.5%22 rx=%220.9%22 ry=%221.9%22 fill=%22#ffffff%22 opacity=%22.55%22/%3E%3C/g%3E%3C/svg%3E") 3 29,auto;cursor:-webkit-image-set(url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2232%22 height=%2232%22 viewBox=%220 0 64 64%22%3E%3Cg transform=%22translate(26.2 37.8) rotate(45)%22 stroke-linejoin=%22round%22%3E%3Cg stroke=%22#ffffff%22 stroke-width=%225%22 fill=%22#ffffff%22%3E%3Cpath d=%22M-3.2,-40 Q0,-42.5 3.2,-40 L4.6,4 L-4.6,4 Z%22/%3E%3Crect x=%22-5.6%22 y=%223%22 width=%2211.2%22 height=%2211%22 rx=%221.6%22/%3E%3Cpath d=%22M-5.8,14 C-6.6,19 -4.4,25 0,31 C4.4,25 6.6,19 5.8,14 Z%22/%3E%3C/g%3E%3Cg stroke=%22#141317%22 stroke-width=%222.2%22 fill=%22#141317%22%3E%3Cpath d=%22M-3.2,-40 Q0,-42.5 3.2,-40 L4.6,4 L-4.6,4 Z%22/%3E%3Crect x=%22-5.6%22 y=%223%22 width=%2211.2%22 height=%2211%22 rx=%221.6%22/%3E%3Cpath d=%22M-5.8,14 C-6.6,19 -4.4,25 0,31 C4.4,25 6.6,19 5.8,14 Z%22/%3E%3C/g%3E%3Cpath d=%22M-3.2,-40 Q0,-42.5 3.2,-40 L4.6,4 L-4.6,4 Z%22 fill=%22#2a1f5c%22/%3E%3Cpath d=%22M-1.4,-38.5 L-1.9,2%22 stroke=%22#6f5bd8%22 stroke-width=%221.6%22 stroke-linecap=%22round%22 fill=%22none%22/%3E%3Crect x=%22-5.6%22 y=%223%22 width=%2211.2%22 height=%2211%22 rx=%221.6%22 fill=%22#e9c46a%22/%3E%3Cpath d=%22M-5.4,6.6 H5.4 M-5.4,10.4 H5.4%22 stroke=%22#b8891f%22 stroke-width=%221.2%22/%3E%3Cpath d=%22M-5.8,14 C-6.6,19 -4.4,25 0,31 C4.4,25 6.6,19 5.8,14 Z%22 fill=%22#f4ecdd%22/%3E%3Cpath d=%22M-6.1,19.5 C-5.2,23.5 -2.8,27.5 0,31 C2.8,27.5 5.2,23.5 6.1,19.5 C3.6,21.2 1.6,19.4 0,20.8 C-1.8,22.2 -4,19.6 -6.1,19.5 Z%22 fill=%22#7b61ff%22/%3E%3Cellipse cx=%22-2.1%22 cy=%2223.5%22 rx=%220.9%22 ry=%221.9%22 fill=%22#ffffff%22 opacity=%22.55%22/%3E%3C/g%3E%3C/svg%3E") 1x,url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2264%22 height=%2264%22 viewBox=%220 0 64 64%22%3E%3Cg transform=%22translate(26.2 37.8) rotate(45)%22 stroke-linejoin=%22round%22%3E%3Cg stroke=%22#ffffff%22 stroke-width=%225%22 fill=%22#ffffff%22%3E%3Cpath d=%22M-3.2,-40 Q0,-42.5 3.2,-40 L4.6,4 L-4.6,4 Z%22/%3E%3Crect x=%22-5.6%22 y=%223%22 width=%2211.2%22 height=%2211%22 rx=%221.6%22/%3E%3Cpath d=%22M-5.8,14 C-6.6,19 -4.4,25 0,31 C4.4,25 6.6,19 5.8,14 Z%22/%3E%3C/g%3E%3Cg stroke=%22#141317%22 stroke-width=%222.2%22 fill=%22#141317%22%3E%3Cpath d=%22M-3.2,-40 Q0,-42.5 3.2,-40 L4.6,4 L-4.6,4 Z%22/%3E%3Crect x=%22-5.6%22 y=%223%22 width=%2211.2%22 height=%2211%22 rx=%221.6%22/%3E%3Cpath d=%22M-5.8,14 C-6.6,19 -4.4,25 0,31 C4.4,25 6.6,19 5.8,14 Z%22/%3E%3C/g%3E%3Cpath d=%22M-3.2,-40 Q0,-42.5 3.2,-40 L4.6,4 L-4.6,4 Z%22 fill=%22#2a1f5c%22/%3E%3Cpath d=%22M-1.4,-38.5 L-1.9,2%22 stroke=%22#6f5bd8%22 stroke-width=%221.6%22 stroke-linecap=%22round%22 fill=%22none%22/%3E%3Crect x=%22-5.6%22 y=%223%22 width=%2211.2%22 height=%2211%22 rx=%221.6%22 fill=%22#e9c46a%22/%3E%3Cpath d=%22M-5.4,6.6 H5.4 M-5.4,10.4 H5.4%22 stroke=%22#b8891f%22 stroke-width=%221.2%22/%3E%3Cpath d=%22M-5.8,14 C-6.6,19 -4.4,25 0,31 C4.4,25 6.6,19 5.8,14 Z%22 fill=%22#f4ecdd%22/%3E%3Cpath d=%22M-6.1,19.5 C-5.2,23.5 -2.8,27.5 0,31 C2.8,27.5 5.2,23.5 6.1,19.5 C3.6,21.2 1.6,19.4 0,20.8 C-1.8,22.2 -4,19.6 -6.1,19.5 Z%22 fill=%22#7b61ff%22/%3E%3Cellipse cx=%22-2.1%22 cy=%2223.5%22 rx=%220.9%22 ry=%221.9%22 fill=%22#ffffff%22 opacity=%22.55%22/%3E%3C/g%3E%3C/svg%3E") 2x) 3 29,auto}
+  html :is(a,button,label,summary,select,[role=button],.frame,.opt,.drop),html :is(a,button,label,.frame,.opt,.drop) *{cursor:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2232%22 height=%2232%22 viewBox=%220 0 64 64%22%3E%3Cg transform=%22translate(26.2 37.8) rotate(45)%22 stroke-linejoin=%22round%22%3E%3Cg stroke=%22#ffffff%22 stroke-width=%225%22 fill=%22#ffffff%22%3E%3Cpath d=%22M-3.2,-40 Q0,-42.5 3.2,-40 L4.6,4 L-4.6,4 Z%22/%3E%3Crect x=%22-5.6%22 y=%223%22 width=%2211.2%22 height=%2211%22 rx=%221.6%22/%3E%3Cpath d=%22M-5.8,14 C-6.6,19 -4.4,25 0,31 C4.4,25 6.6,19 5.8,14 Z%22/%3E%3C/g%3E%3Cg stroke=%22#141317%22 stroke-width=%222.2%22 fill=%22#141317%22%3E%3Cpath d=%22M-3.2,-40 Q0,-42.5 3.2,-40 L4.6,4 L-4.6,4 Z%22/%3E%3Crect x=%22-5.6%22 y=%223%22 width=%2211.2%22 height=%2211%22 rx=%221.6%22/%3E%3Cpath d=%22M-5.8,14 C-6.6,19 -4.4,25 0,31 C4.4,25 6.6,19 5.8,14 Z%22/%3E%3C/g%3E%3Cpath d=%22M-3.2,-40 Q0,-42.5 3.2,-40 L4.6,4 L-4.6,4 Z%22 fill=%22#2a1f5c%22/%3E%3Cpath d=%22M-1.4,-38.5 L-1.9,2%22 stroke=%22#6f5bd8%22 stroke-width=%221.6%22 stroke-linecap=%22round%22 fill=%22none%22/%3E%3Crect x=%22-5.6%22 y=%223%22 width=%2211.2%22 height=%2211%22 rx=%221.6%22 fill=%22#e9c46a%22/%3E%3Cpath d=%22M-5.4,6.6 H5.4 M-5.4,10.4 H5.4%22 stroke=%22#b8891f%22 stroke-width=%221.2%22/%3E%3Cpath d=%22M-5.8,14 C-6.6,19 -4.4,25 0,31 C4.4,25 6.6,19 5.8,14 Z%22 fill=%22#f4ecdd%22/%3E%3Cpath d=%22M-6.1,19.5 C-5.2,23.5 -2.8,27.5 0,31 C2.8,27.5 5.2,23.5 6.1,19.5 C3.6,21.2 1.6,19.4 0,20.8 C-1.8,22.2 -4,19.6 -6.1,19.5 Z%22 fill=%22#ff6a4d%22/%3E%3Cellipse cx=%22-2.1%22 cy=%2223.5%22 rx=%220.9%22 ry=%221.9%22 fill=%22#ffffff%22 opacity=%22.55%22/%3E%3C/g%3E%3C/svg%3E") 3 29,pointer!important;cursor:-webkit-image-set(url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2232%22 height=%2232%22 viewBox=%220 0 64 64%22%3E%3Cg transform=%22translate(26.2 37.8) rotate(45)%22 stroke-linejoin=%22round%22%3E%3Cg stroke=%22#ffffff%22 stroke-width=%225%22 fill=%22#ffffff%22%3E%3Cpath d=%22M-3.2,-40 Q0,-42.5 3.2,-40 L4.6,4 L-4.6,4 Z%22/%3E%3Crect x=%22-5.6%22 y=%223%22 width=%2211.2%22 height=%2211%22 rx=%221.6%22/%3E%3Cpath d=%22M-5.8,14 C-6.6,19 -4.4,25 0,31 C4.4,25 6.6,19 5.8,14 Z%22/%3E%3C/g%3E%3Cg stroke=%22#141317%22 stroke-width=%222.2%22 fill=%22#141317%22%3E%3Cpath d=%22M-3.2,-40 Q0,-42.5 3.2,-40 L4.6,4 L-4.6,4 Z%22/%3E%3Crect x=%22-5.6%22 y=%223%22 width=%2211.2%22 height=%2211%22 rx=%221.6%22/%3E%3Cpath d=%22M-5.8,14 C-6.6,19 -4.4,25 0,31 C4.4,25 6.6,19 5.8,14 Z%22/%3E%3C/g%3E%3Cpath d=%22M-3.2,-40 Q0,-42.5 3.2,-40 L4.6,4 L-4.6,4 Z%22 fill=%22#2a1f5c%22/%3E%3Cpath d=%22M-1.4,-38.5 L-1.9,2%22 stroke=%22#6f5bd8%22 stroke-width=%221.6%22 stroke-linecap=%22round%22 fill=%22none%22/%3E%3Crect x=%22-5.6%22 y=%223%22 width=%2211.2%22 height=%2211%22 rx=%221.6%22 fill=%22#e9c46a%22/%3E%3Cpath d=%22M-5.4,6.6 H5.4 M-5.4,10.4 H5.4%22 stroke=%22#b8891f%22 stroke-width=%221.2%22/%3E%3Cpath d=%22M-5.8,14 C-6.6,19 -4.4,25 0,31 C4.4,25 6.6,19 5.8,14 Z%22 fill=%22#f4ecdd%22/%3E%3Cpath d=%22M-6.1,19.5 C-5.2,23.5 -2.8,27.5 0,31 C2.8,27.5 5.2,23.5 6.1,19.5 C3.6,21.2 1.6,19.4 0,20.8 C-1.8,22.2 -4,19.6 -6.1,19.5 Z%22 fill=%22#ff6a4d%22/%3E%3Cellipse cx=%22-2.1%22 cy=%2223.5%22 rx=%220.9%22 ry=%221.9%22 fill=%22#ffffff%22 opacity=%22.55%22/%3E%3C/g%3E%3C/svg%3E") 1x,url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2264%22 height=%2264%22 viewBox=%220 0 64 64%22%3E%3Cg transform=%22translate(26.2 37.8) rotate(45)%22 stroke-linejoin=%22round%22%3E%3Cg stroke=%22#ffffff%22 stroke-width=%225%22 fill=%22#ffffff%22%3E%3Cpath d=%22M-3.2,-40 Q0,-42.5 3.2,-40 L4.6,4 L-4.6,4 Z%22/%3E%3Crect x=%22-5.6%22 y=%223%22 width=%2211.2%22 height=%2211%22 rx=%221.6%22/%3E%3Cpath d=%22M-5.8,14 C-6.6,19 -4.4,25 0,31 C4.4,25 6.6,19 5.8,14 Z%22/%3E%3C/g%3E%3Cg stroke=%22#141317%22 stroke-width=%222.2%22 fill=%22#141317%22%3E%3Cpath d=%22M-3.2,-40 Q0,-42.5 3.2,-40 L4.6,4 L-4.6,4 Z%22/%3E%3Crect x=%22-5.6%22 y=%223%22 width=%2211.2%22 height=%2211%22 rx=%221.6%22/%3E%3Cpath d=%22M-5.8,14 C-6.6,19 -4.4,25 0,31 C4.4,25 6.6,19 5.8,14 Z%22/%3E%3C/g%3E%3Cpath d=%22M-3.2,-40 Q0,-42.5 3.2,-40 L4.6,4 L-4.6,4 Z%22 fill=%22#2a1f5c%22/%3E%3Cpath d=%22M-1.4,-38.5 L-1.9,2%22 stroke=%22#6f5bd8%22 stroke-width=%221.6%22 stroke-linecap=%22round%22 fill=%22none%22/%3E%3Crect x=%22-5.6%22 y=%223%22 width=%2211.2%22 height=%2211%22 rx=%221.6%22 fill=%22#e9c46a%22/%3E%3Cpath d=%22M-5.4,6.6 H5.4 M-5.4,10.4 H5.4%22 stroke=%22#b8891f%22 stroke-width=%221.2%22/%3E%3Cpath d=%22M-5.8,14 C-6.6,19 -4.4,25 0,31 C4.4,25 6.6,19 5.8,14 Z%22 fill=%22#f4ecdd%22/%3E%3Cpath d=%22M-6.1,19.5 C-5.2,23.5 -2.8,27.5 0,31 C2.8,27.5 5.2,23.5 6.1,19.5 C3.6,21.2 1.6,19.4 0,20.8 C-1.8,22.2 -4,19.6 -6.1,19.5 Z%22 fill=%22#ff6a4d%22/%3E%3Cellipse cx=%22-2.1%22 cy=%2223.5%22 rx=%220.9%22 ry=%221.9%22 fill=%22#ffffff%22 opacity=%22.55%22/%3E%3C/g%3E%3C/svg%3E") 2x) 3 29,pointer!important}
+  html :is(input:not([type=radio]):not([type=checkbox]),textarea){cursor:text!important}
+  html :is(button:disabled,.btn:disabled){cursor:not-allowed!important}
+  html .row.dragging,html .row.dragging *{cursor:grabbing!important}
+}
+/* click: a squishy dab of paint that wobbles and fades (transform/opacity only) */
+.splat{position:fixed;left:0;top:0;width:60px;height:60px;margin:-30px 0 0 -30px;pointer-events:none;z-index:300;will-change:transform,opacity;
+  animation:smoosh .8s cubic-bezier(.2,.8,.2,1) forwards}
+.splat svg{width:100%;height:100%;overflow:visible;display:block}
+@keyframes smoosh{
+  0%{transform:scale(.12);opacity:1}
+  28%{transform:scale(1.2,.76)}
+  46%{transform:scale(.88,1.12)}
+  62%{transform:scale(1.06,.95)}
+  76%{transform:scale(1);opacity:.95}
+  100%{transform:scale(1.04);opacity:0}
+}
+
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+
+<link rel="icon" href="/favicon.ico?v=1" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=1">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png?v=1">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=1">
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="pill" href="index.html">← Kimberly Marnell</a>
+    <a class="pill" href="designers.html">Interior designer? Start here ↗</a>
+  </div>
+
+  <header class="hero">
+    <p class="eyebrow">Commissions · Haven Art House</p>
+    <h1>Commission a <em>painting</em></h1>
+    <p class="lede">A one-of-a-kind oil or acrylic portrait of the people or animals you love, painted from your photos in Kimberly's style. Answer five short steps and you'll see your exact price before you commit.</p>
+  </header>
+
+  <ol class="how" aria-label="How a commission works">
+    <li><span class="n">STEP 1</span><b>Order &amp; deposit</b><span>Choose size and details, then pay 50% to reserve your spot.</span></li>
+    <li><span class="n">STEP 2</span><b>Send photos</b><span>Email your reference photos with your order number.</span></li>
+    <li><span class="n">STEP 3</span><b>Approve the sketch</b><span>Kimberly sends the composition for your OK before painting.</span></li>
+    <li><span class="n">STEP 4</span><b>Painting</b><span>Kimberly paints your piece and shares progress.</span></li>
+    <li><span class="n">STEP 5</span><b>Final approval</b><span>See photos of the finished work, then pay the balance.</span></li>
+    <li><span class="n">STEP 6</span><b>Shipped to you</b><span>Signed, with a certificate of authenticity. Fully insured shipping.</span></li>
+  </ol>
+
+  <div class="layout">
+    <form id="form" novalidate>
+      <nav class="steps-nav" id="steps-nav" aria-label="Order steps"></nav>
+
+      <!-- STEP 1 -->
+      <section class="card step" data-step="1" data-name="Subject">
+        <h2>What should Kimberly <em>paint?</em></h2>
+        <p class="sub">Tell us who or what the painting is of.</p>
+        <fieldset>
+          <legend>Subject</legend>
+          <div class="opts">
+            <div class="opt"><input type="radio" name="subject" id="s-person" value="Person portrait" checked><label for="s-person"><b>Person</b><span>Portrait of one person</span></label></div>
+            <div class="opt"><input type="radio" name="subject" id="s-pet" value="Pet portrait"><label for="s-pet"><b>Pet</b><span>Dog, cat, horse and more</span></label></div>
+            <div class="opt"><input type="radio" name="subject" id="s-group" value="Couple or family"><label for="s-group"><b>Couple or family</b><span>People and pets together</span></label></div>
+            <div class="opt"><input type="radio" name="subject" id="s-other" value="Something else"><label for="s-other"><b>Something else</b><span>A place, a home, an idea</span></label></div>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>How many people or animals in the painting?</legend>
+          <div class="stepper"><button type="button" id="cnt-minus" aria-label="Fewer subjects">−</button><output id="count" aria-live="polite">1</output><button type="button" id="cnt-plus" aria-label="More subjects">+</button></div>
+          <p class="hint">Each extra person or animal adds 25% to the base price. Use 0 for a painting with no figures.</p>
+        </fieldset>
+        <div class="field">
+          <label for="occasion">Is it for an occasion? <span class="hint">(optional)</span></label>
+          <input type="text" id="occasion" placeholder="Anniversary, memorial, birthday, just because…">
+        </div>
+        <div class="nav"><span></span><button type="button" class="btn solid next">Next: size &amp; style</button></div>
+      </section>
+
+      <!-- STEP 2 -->
+      <section class="card step" data-step="2" data-name="Size & style" hidden>
+        <h2>Size <em>&amp; style</em></h2>
+        <p class="sub" id="rate-note">People are $3.00 per square inch of canvas; pets, places and everything else $2.50.</p>
+        <fieldset>
+          <legend>Canvas size (inches)</legend>
+          <div class="opts sizes" id="sizes"></div>
+        </fieldset>
+        <fieldset>
+          <legend>Medium</legend>
+          <div class="opts">
+            <div class="opt"><input type="radio" name="medium" id="m-oil" value="Oil on canvas" checked><label for="m-oil"><b>Oil on canvas</b><span>Rich, slow-blended color</span></label></div>
+            <div class="opt"><input type="radio" name="medium" id="m-acr" value="Acrylic on canvas"><label for="m-acr"><b>Acrylic on canvas</b><span>Bright, bold, faster drying</span></label></div>
+            <div class="opt"><input type="radio" name="medium" id="m-any" value="Kimberly's choice"><label for="m-any"><b>Kimberly's choice</b><span>Whatever suits the subject</span></label></div>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Background</legend>
+          <div class="opts">
+            <div class="opt"><input type="radio" name="bg" id="b-flor" value="Flowers & botanicals" checked><label for="b-flor"><b>Flowers &amp; botanicals</b><span>Kimberly's signature</span></label></div>
+            <div class="opt"><input type="radio" name="bg" id="b-sky" value="Sky & light"><label for="b-sky"><b>Sky &amp; light</b><span>Soft, open atmosphere</span></label></div>
+            <div class="opt"><input type="radio" name="bg" id="b-photo" value="Like my photo"><label for="b-photo"><b>Like my photo</b><span>Keep the real setting</span></label></div>
+            <div class="opt"><input type="radio" name="bg" id="b-plain" value="Simple / solid"><label for="b-plain"><b>Simple</b><span>A calm solid tone</span></label></div>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Color mood</legend>
+          <div class="opts">
+            <div class="opt"><input type="radio" name="mood" id="c-full" value="Full color" checked><label for="c-full"><b>Full color</b></label></div>
+            <div class="opt"><input type="radio" name="mood" id="c-mono" value="Monochrome with one color accent"><label for="c-mono"><b>Monochrome</b><span>Gray with one color accent</span></label></div>
+            <div class="opt"><input type="radio" name="mood" id="c-match" value="Match my room"><label for="c-match"><b>Match my room</b><span>Tell us the colors</span></label></div>
+          </div>
+        </fieldset>
+        <div class="nav"><button type="button" class="btn back">Back</button><button type="button" class="btn solid next">Next: reference photos</button></div>
+      </section>
+
+      <!-- STEP 3 -->
+      <section class="card step" data-step="3" data-name="Photos" hidden>
+        <h2>Your reference <em>photos</em></h2>
+        <p class="sub">Add 1 to 6 photos. We'll check each one and tell you if it's sharp enough to paint from.</p>
+        <label class="drop" id="drop" for="photos">
+          <b>Choose photos or drag them here</b>
+          <span class="hint">JPG, PNG or HEIC from your phone · best at 1500 px or larger</span>
+        </label>
+        <input type="file" id="photos" accept="image/*" multiple hidden>
+        <div class="thumbs" id="thumbs" aria-live="polite"></div>
+        <ul class="tips">
+          <li>Natural daylight, no flash</li>
+          <li>Camera at eye level with the subject</li>
+          <li>Eyes in sharp focus</li>
+          <li>One photo per person or pet is fine</li>
+        </ul>
+        <div class="field">
+          <label for="notes">Anything Kimberly should know?</label>
+          <textarea id="notes" placeholder="Personality, favorite flowers, which photo to use for the face, what to leave out…"></textarea>
+        </div>
+        <p class="hint">Your photos stay on your device for now. After you place the order you'll email them to Kimberly with your order number, in full quality.</p>
+        <p class="err" id="err-3" hidden>Add at least one photo so Kimberly can see what to paint.</p>
+        <div class="nav"><button type="button" class="btn back">Back</button><button type="button" class="btn solid next">Next: delivery</button></div>
+      </section>
+
+      <!-- STEP 4 -->
+      <section class="card step" data-step="4" data-name="Delivery" hidden>
+        <h2>Timing <em>&amp; delivery</em></h2>
+        <p class="sub">Where should the finished painting go?</p>
+        <fieldset>
+          <legend>Timeline</legend>
+          <div class="opts">
+            <div class="opt"><input type="radio" name="speed" id="t-std" value="Standard" checked><label for="t-std"><b>Standard</b><span>Kimberly confirms your date</span></label></div>
+            <div class="opt"><input type="radio" name="speed" id="t-rush" value="Rush"><label for="t-rush"><b>Rush</b><span>Moves to the front · +25%</span></label></div>
+          </div>
+        </fieldset>
+        <fieldset id="pack-wrap" hidden>
+          <legend>How should your large painting ship?</legend>
+          <div class="opts">
+            <div class="opt"><input type="radio" name="pack" id="p-crate" value="Crated" checked><label for="p-crate"><b>Ready to hang</b><span>Stretched, wired and shipped in a wooden crate · +$175</span></label></div>
+            <div class="opt"><input type="radio" name="pack" id="p-roll" value="Rolled"><label for="p-roll"><b>Rolled in a tube</b><span>Free insured shipping · you have it stretched or framed locally</span></label></div>
+          </div>
+          <p class="hint">Rolled canvases arrive unstretched with extra margin on every side, so any frame shop can stretch or frame it.</p>
+        </fieldset>
+        <div class="field">
+          <label for="needby">Do you need it by a date? <span class="hint">(optional)</span></label>
+          <input type="date" id="needby">
+        </div>
+        <div class="row2">
+          <div class="field"><label for="name">Full name</label><input type="text" id="name" autocomplete="name" required></div>
+          <div class="field"><label for="email">Email</label><input type="email" id="email" autocomplete="email" required></div>
+        </div>
+        <div class="field"><label for="phone">Phone <span class="hint">(for shipping updates)</span></label><input type="tel" id="phone" autocomplete="tel"></div>
+        <div class="field"><label for="addr">Shipping address</label><input type="text" id="addr" autocomplete="street-address" required></div>
+        <div class="row3">
+          <div class="field"><label for="city">City</label><input type="text" id="city" autocomplete="address-level2" required></div>
+          <div class="field"><label for="state">State</label><input type="text" id="state" autocomplete="address-level1" required></div>
+          <div class="field"><label for="zip">ZIP</label><input type="text" id="zip" autocomplete="postal-code" required></div>
+        </div>
+        <div class="field">
+          <label for="country">Country</label>
+          <select id="country"><option>United States</option><option>Canada</option><option>United Kingdom</option><option>Australia</option><option>Other</option></select>
+        </div>
+        <p class="err" id="err-4" hidden>Fill in your name, a valid email and your full shipping address.</p>
+        <div class="nav"><button type="button" class="btn back">Back</button><button type="button" class="btn solid next">Next: review</button></div>
+      </section>
+
+      <!-- STEP 5 -->
+      <section class="card step" data-step="5" data-name="Review" hidden>
+        <h2>Review <em>your order</em></h2>
+        <dl class="review" id="review"></dl>
+        <fieldset>
+          <legend>How would you like to pay?</legend>
+          <div class="opts">
+            <div class="opt" id="plan-dep-wrap"><input type="radio" name="plan" id="pl-dep" value="deposit" checked><label for="pl-dep"><b>50% deposit today</b><span id="pl-dep-amt"></span></label></div>
+            <div class="opt"><input type="radio" name="plan" id="pl-full" value="full"><label for="pl-full"><b>Pay in full today</b><span id="pl-full-amt"></span></label></div>
+          </div>
+          <p class="hint" id="plan-note" hidden>Commissions under $500 are paid in full when you order.</p>
+        </fieldset>
+        <label class="check"><input type="checkbox" id="agree"> <span id="terms"></span></label>
+        <p class="err" id="err-5" hidden>Please confirm the payment terms to place your order.</p>
+        <div class="nav"><button type="button" class="btn back">Back</button><button type="button" class="btn solid" id="place">Place order</button></div>
+      </section>
+
+      <!-- DONE -->
+      <section class="card" id="done" hidden>
+        <h2>Order <span class="order-id" id="oid"></span> <em>is ready</em></h2>
+        <p class="sub">Two quick steps finish your order.</p>
+        <ol class="done-steps">
+          <li><div><h3><span id="pay-h">Pay your deposit</span>: <span id="dep-amt" class="order-id"></span></h3>
+            <p id="pay-text">Pay securely by card or bank transfer. On the payment page, type in the exact amount above, then add your name and email.</p>
+            <div class="acts" id="pay-acts"></div></div></li>
+          <li><div><h3>Email your photos and order to Kimberly</h3>
+            <p>Copy your order summary, start an email to the address below, paste it in, and attach your reference photos.</p>
+            <div class="acts mail">
+              <code id="kim-email">kimberlysartandphotography@gmail.com</code>
+              <button type="button" class="btn" id="copy-email">Copy email</button>
+              <button type="button" class="btn solid" id="copy-order">Copy order summary</button>
+              <a class="btn" id="mailto" href="#">Open in my email app</a>
+            </div>
+            <p class="hint" id="copy-note" aria-live="polite"></p></div></li>
+          <li><div><h3>Kimberly takes it from here</h3><p>She'll confirm your order and timeline by email, then send the sketch for your approval before she starts painting.</p></div></li>
+        </ol>
+        <div class="nav"><button type="button" class="btn" id="edit">Change my order</button><a class="btn" href="index.html">Back to the website</a></div>
+      </section>
+    </form>
+
+    <aside class="ticket" aria-live="polite" aria-label="Your price">
+      <span class="k">Your commission</span>
+      <span class="sum" id="t-sum">16 × 20 in oil portrait</span>
+      <dl class="lines" id="t-lines"></dl>
+      <div class="total"><span>Total</span><b id="t-total">$800</b></div>
+      <div class="dep"><div><span id="t-dep-l">Deposit today (50%)</span><b id="t-dep">$400</b></div><div id="t-bal-row"><span>Balance before shipping</span><span id="t-bal">$400</span></div></div>
+      <p class="fine">Includes a signed certificate of authenticity and fully insured shipping. Free in the US up to 24 × 36 in; larger sizes ship crated (+$175) or rolled in a tube for free. Shipping outside the US is quoted separately. Sales tax is added where required.</p>
+    </aside>
+  </div>
+</div>
+
+<div class="mobile-bar" aria-hidden="true"><div><span>Total</span><b id="m-total">$800</b></div><div style="text-align:right"><span id="m-dep-l">Deposit today</span><b id="m-dep">$400</b></div></div>
+
+<script>
+(function(){
+  /* ---- pricing (approved: $2.50 per sq in) ---- */
+  var RATE_PEOPLE = 3.0, RATE_OTHER = 2.5, EXTRA = 0.25, RUSH = 0.25, OVERSIZE = 175; /* oversize = crate + insured freight for 30x40 and larger */
+  /* Bluevine payment link where the buyer enters the amount. Leave '' until it exists. */
+  var PAY_LINK = 'https://pay.bluevine.com/p/26fc2790c2254b94bf283d54a285a9c7';
+  var SIZES = [[8,10],[11,14],[12,16],[16,20],[18,24],[20,24],[24,30],[24,36],[30,40],[36,48]];
+  var $ = function(id){return document.getElementById(id)};
+  var money = function(n){return '$' + Math.round(n).toLocaleString('en-US')};
+  var state = {step:1, size:'16x20', count:1, photos:[]};
+
+  // sizes
+  var sizesEl = $('sizes');
+  SIZES.forEach(function(s){
+    var id='z-'+s[0]+'x'+s[1], w=s[0], h=s[1], sc=46/Math.max(w,h);
+    var d=document.createElement('div'); d.className='opt';
+    d.innerHTML='<input type="radio" name="size" id="'+id+'" value="'+w+'x'+h+'"'+(w===16&&h===20?' checked':'')+'>'+
+      '<label for="'+id+'"><i class="size-box" style="width:'+Math.round(w*sc)+'px;height:'+Math.round(h*sc)+'px"></i><b>'+w+' × '+h+'</b><span data-sq="'+(w*h)+'"></span></label>';
+    sizesEl.appendChild(d);
+  });
+
+  function val(name){var el=document.querySelector('input[name="'+name+'"]:checked');return el?el.value:''}
+  function rate(){var s=val('subject');return (s==='Person portrait'||s==='Couple or family')?RATE_PEOPLE:RATE_OTHER;}
+  function price(){
+    var p=val('size').split('x'), w=+p[0], h=+p[1], base=w*h*rate();
+    var extra=Math.max(0,state.count-1)*EXTRA*base;
+    var sub=base+extra, rush=val('speed')==='Rush'?sub*RUSH:0;
+    var large=w*h>=1200, rolled=large&&val('pack')==='Rolled';
+    var big=(large&&!rolled)?OVERSIZE:0;
+    var total=Math.round(sub+rush+big);
+    var full=total<500||val('plan')==='full';
+    var dep=full?total:Math.ceil(total/2);
+    return {w:w,h:h,base:base,extra:extra,rush:rush,big:big,large:large,rolled:rolled,full:full,small:total<500,total:total,dep:dep,bal:total-dep};
+  }
+  function render(){
+    var p=price();
+    var subj=val('subject'), med=val('medium');
+    $('t-sum').textContent=p.w+' × '+p.h+' in · '+subj.toLowerCase()+(med==="Kimberly's choice"?'':' · '+med.replace(' on canvas','').toLowerCase());
+    document.querySelectorAll('[data-sq]').forEach(function(el){el.textContent=money(+el.getAttribute('data-sq')*rate());});
+    var L=[['Canvas '+p.w+' × '+p.h+' in ('+(p.w*p.h)+' sq in × $'+rate().toFixed(2)+')',money(p.base)]];
+    if(p.extra) L.push(['Extra subjects ('+(state.count-1)+' × 25%)','+'+money(p.extra)]);
+    if(p.rush) L.push(['Rush timeline (+25%)','+'+money(p.rush)]);
+    if(p.big) L.push(['Oversize crate & freight','+'+money(p.big)]);
+    L.push([p.rolled?'Insured shipping, rolled in a tube':'Insured shipping', $('country').value==='United States'?(p.big?'Included':'Free (US)'):'Quoted separately']);
+    $('pack-wrap').hidden=!p.large;
+    $('plan-dep-wrap').hidden=p.small; $('plan-note').hidden=!p.small;
+    $('pl-dep-amt').textContent=money(Math.ceil(p.total/2))+' now, '+money(p.total-Math.ceil(p.total/2))+' before shipping'; $('pl-full-amt').textContent=money(p.total)+' now, nothing later';
+    $('t-dep-l').textContent=p.full?'Due today (paid in full)':'Deposit today (50%)'; $('m-dep-l').textContent=p.full?'Due today':'Deposit today'; $('t-bal-row').hidden=p.full;
+    $('terms').textContent=p.full?'I understand payment in full reserves my spot and is non-refundable once Kimberly starts the sketch. I will approve photos of the finished painting before it ships.':'I understand the 50% deposit reserves my spot and is non-refundable once Kimberly starts the sketch. The balance is due after I approve photos of the finished painting, before it ships.';
+    $('t-lines').innerHTML='';
+    L.forEach(function(l){var d=document.createElement('div');var dt=document.createElement('dt');dt.textContent=l[0];var dd=document.createElement('dd');dd.textContent=l[1];d.append(dt,dd);$('t-lines').appendChild(d);});
+    $('t-total').textContent=money(p.total); $('t-dep').textContent=money(p.dep); $('t-bal').textContent=money(p.bal);
+    $('m-total').textContent=money(p.total); $('m-dep').textContent=money(p.dep);
+  }
+  document.getElementById('form').addEventListener('change',function(){render(); if(state.step===5) buildReview();});
+  $('cnt-minus').onclick=function(){state.count=Math.max(0,state.count-1);$('count').textContent=state.count;render();};
+  $('cnt-plus').onclick=function(){state.count=Math.min(8,state.count+1);$('count').textContent=state.count;render();};
+  document.querySelectorAll('input[name="subject"]').forEach(function(r){r.addEventListener('change',function(){
+    if(r.value==='Couple or family'&&state.count<2){state.count=2;$('count').textContent=2;}
+    if(r.value==='Something else'&&state.count===1){state.count=0;$('count').textContent=0;}
+    if((r.value==='Person portrait'||r.value==='Pet portrait')&&state.count===0){state.count=1;$('count').textContent=1;}
+    render();});});
+
+  // steps
+  var steps=[].slice.call(document.querySelectorAll('.step'));
+  function buildNav(){
+    var nav=$('steps-nav'); nav.innerHTML='';
+    steps.forEach(function(s,i){var b=document.createElement('button');b.type='button';b.textContent=(i+1)+'. '+s.getAttribute('data-name');
+      if(i+1===state.step) b.setAttribute('aria-current','step'); else if(i+1<state.step) b.className='done';
+      b.onclick=function(){ if(i+1<state.step) go(i+1); }; nav.appendChild(b);});
+  }
+  function go(n){
+    state.step=n; steps.forEach(function(s){s.hidden=+s.getAttribute('data-step')!==n}); $('done').hidden=true; $('steps-nav').hidden=false;
+    buildNav(); if(n===5) buildReview();
+    var top=document.querySelector('.layout').getBoundingClientRect().top+scrollY-10; if(scrollY>top) scrollTo(0,top);
+    var h=steps[n-1].querySelector('h2'); h.setAttribute('tabindex','-1'); h.focus({preventScroll:true});
+  }
+  function validate(n){
+    if(n===3){var ok=state.photos.length>0;$('err-3').hidden=ok;return ok;}
+    if(n===4){var req=['name','email','addr','city','state','zip'],ok=true;
+      req.forEach(function(id){var el=$(id);var good=el.value.trim()!=='' && (id!=='email'||/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value.trim()));el.setAttribute('aria-invalid',good?'false':'true');if(!good)ok=false;});
+      $('err-4').hidden=ok;return ok;}
+    return true;
+  }
+  document.querySelectorAll('.next').forEach(function(b){b.onclick=function(){ if(validate(state.step)) go(state.step+1); };});
+  document.querySelectorAll('.back').forEach(function(b){b.onclick=function(){ go(state.step-1); };});
+
+  // photos
+  var input=$('photos'), drop=$('drop');
+  function addFiles(list){
+    [].slice.call(list).forEach(function(f){
+      if(!/^image\//.test(f.type)&&!/\.(heic|heif)$/i.test(f.name)) return;
+      if(state.photos.length>=6) return;
+      var item={file:f,name:f.name,w:0,h:0,url:URL.createObjectURL(f)}; state.photos.push(item);
+      var im=new Image(); im.onload=function(){item.w=im.naturalWidth;item.h=im.naturalHeight;drawThumbs();}; im.onerror=function(){drawThumbs();}; im.src=item.url;
+    });
+    drawThumbs(); $('err-3').hidden=true;
+  }
+  function drawThumbs(){
+    var t=$('thumbs'); t.innerHTML='';
+    state.photos.forEach(function(p,i){
+      var d=document.createElement('div'); d.className='thumb';
+      var im=document.createElement('img'); im.src=p.url; im.alt='Reference photo '+(i+1);
+      var q=document.createElement('div'); q.className='q';
+      var s=document.createElement('span'); var short=Math.min(p.w,p.h);
+      if(!p.w){s.textContent='Added';} else if(short>=1200){s.className='good';s.textContent='Great quality';} else if(short>=700){s.className='good';s.textContent='Good';} else {s.className='low';s.textContent='Low-res: send a larger copy';}
+      var rm=document.createElement('button'); rm.type='button'; rm.textContent='Remove'; rm.setAttribute('aria-label','Remove photo '+(i+1));
+      rm.onclick=function(){URL.revokeObjectURL(p.url);state.photos.splice(i,1);drawThumbs();};
+      q.append(s,rm); d.append(im,q); t.appendChild(d);
+    });
+    var lbl=drop.querySelector('b'); lbl.textContent=state.photos.length?('Add more photos ('+state.photos.length+' of 6)'):'Choose photos or drag them here';
+  }
+  input.addEventListener('change',function(){addFiles(input.files);input.value='';});
+  drop.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();input.click();}});
+  drop.setAttribute('tabindex','0'); drop.setAttribute('role','button');
+  ['dragenter','dragover'].forEach(function(ev){drop.addEventListener(ev,function(e){e.preventDefault();drop.classList.add('over');});});
+  ['dragleave','drop'].forEach(function(ev){drop.addEventListener(ev,function(e){e.preventDefault();drop.classList.remove('over');});});
+  drop.addEventListener('drop',function(e){if(e.dataTransfer)addFiles(e.dataTransfer.files);});
+
+  // review & summary
+  function summary(){
+    var p=price(), lines=[];
+    lines.push('COMMISSION ORDER '+(state.oid||''));
+    lines.push('Subject: '+val('subject')+' · '+state.count+' figure'+(state.count===1?'':'s'));
+    if($('occasion').value.trim()) lines.push('Occasion: '+$('occasion').value.trim());
+    lines.push('Size: '+p.w+' x '+p.h+' in · '+val('medium'));
+    lines.push('Background: '+val('bg')+' · Color: '+val('mood'));
+    lines.push('Timeline: '+val('speed')+($('needby').value?' · Needed by '+$('needby').value:''));
+    lines.push('Photos: '+state.photos.length+' ('+state.photos.map(function(x){return x.name}).join(', ')+') - attached to this email');
+    if($('notes').value.trim()) lines.push('Notes: '+$('notes').value.trim());
+    lines.push('');
+    lines.push('Name: '+$('name').value.trim());
+    lines.push('Email: '+$('email').value.trim()+($('phone').value.trim()?' · Phone: '+$('phone').value.trim():''));
+    lines.push('Ship to: '+[$('addr').value,$('city').value,$('state').value,$('zip').value,$('country').value].map(function(s){return s.trim()}).join(', '));
+    lines.push('');
+    if(p.large) lines.push('Shipping: '+(p.rolled?'Rolled in a tube (free, insured)':'Crated, ready to hang (+'+money(OVERSIZE)+')'));
+    lines.push('Total: '+money(p.total)+(p.full?' · Paid in full today':' · Deposit (50%): '+money(p.dep)+' · Balance: '+money(p.bal)));
+    return lines.join('\n');
+  }
+  function buildReview(){
+    var p=price(), rows=[
+      ['Subject',val('subject')+' · '+state.count+' figure'+(state.count===1?'':'s')+($('occasion').value.trim()?' · '+$('occasion').value.trim():'')],
+      ['Painting',p.w+' × '+p.h+' in · '+val('medium')],
+      ['Style',val('bg')+' · '+val('mood')],
+      ['Photos',state.photos.length+' photo'+(state.photos.length===1?'':'s')],
+      ['Timeline',val('speed')+($('needby').value?' · needed by '+$('needby').value:'')],
+      ['Ship to',$('name').value+', '+[$('addr').value,$('city').value,$('state').value,$('zip').value,$('country').value].join(', ')],
+      ['Total',money(p.total)+(p.full?' · paid in full today':' · deposit today '+money(p.dep))]
+    ];
+    var r=$('review'); r.innerHTML='';
+    rows.forEach(function(x){var d=document.createElement('div');var dt=document.createElement('dt');dt.textContent=x[0];var dd=document.createElement('dd');dd.textContent=x[1];d.append(dt,dd);r.appendChild(d);});
+  }
+  $('place').onclick=function(){
+    if(!$('agree').checked){$('err-5').hidden=false;return;} $('err-5').hidden=true;
+    var d=new Date(); state.oid='KM-'+String(d.getFullYear()).slice(2)+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')+'-'+Math.random().toString(36).slice(2,6).toUpperCase();
+    var p=price();
+    $('oid').textContent=state.oid; $('dep-amt').textContent=money(p.dep); $('pay-h').textContent=p.full?'Pay in full':'Pay your deposit';
+    var acts=$('pay-acts'); acts.innerHTML='';
+    if(PAY_LINK){var a=document.createElement('a');a.className='btn solid';a.href=PAY_LINK;a.target='_blank';a.rel='noopener';a.textContent='Pay '+money(p.dep)+(p.full?'':' deposit');acts.appendChild(a);}
+    else {$('pay-text').textContent='Kimberly will email you a secure card or bank-transfer payment link for '+money(p.dep)+' within one business day of receiving your order.';}
+    var subj='Commission order '+state.oid;
+    $('mailto').href='mailto:'+$('kim-email').textContent+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(summary()+'\n\n(Please attach your reference photos.)');
+    steps.forEach(function(s){s.hidden=true}); $('steps-nav').hidden=true; $('done').hidden=false;
+    var h=$('done').querySelector('h2'); h.setAttribute('tabindex','-1'); h.focus();
+    var top=document.querySelector('.layout').getBoundingClientRect().top+scrollY-10; scrollTo(0,top);
+  };
+  $('edit').onclick=function(){go(5);};
+  function copy(text,btn,done){
+    function fallback(){$('copy-note').textContent='Copy didn\'t work here. Select the text and copy it yourself.';}
+    try{navigator.clipboard.writeText(text).then(function(){btn.textContent=done;$('copy-note').textContent='';},fallback);}catch(e){fallback();}
+  }
+  $('copy-email').onclick=function(){copy($('kim-email').textContent,this,'Email copied');};
+  $('copy-order').onclick=function(){copy(summary(),this,'Order copied');};
+
+  buildNav(); render();
+})();
+/* paint splat on click (mouse only, skipped for reduced motion) */
+(function(){
+  if(!matchMedia('(hover:hover) and (pointer:fine)').matches||matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var S=["<path d=\"M16.1,-5.4Q15.4,0.0 15.1,4.7Q14.7,9.5 10.7,12.1Q6.7,14.8 2.1,16.4Q-2.6,17.9 -7.1,15.7Q-11.6,13.4 -11.7,8.4Q-11.8,3.5 -12.6,-0.3Q-13.5,-4.0 -13.5,-9.8Q-13.5,-15.6 -7.9,-15.5Q-2.2,-15.4 1.8,-14.1Q5.9,-12.8 11.3,-11.8Q16.8,-10.8 16.1,-5.4Z\"/><circle cx=\"-26.5\" cy=\"5.0\" r=\"2.4\"/><circle cx=\"-14.7\" cy=\"-17.6\" r=\"2.6\"/><circle cx=\"17.0\" cy=\"-18.5\" r=\"2.8\"/>", "<path d=\"M14.5,-3.9Q16.7,0.0 15.8,4.8Q14.8,9.5 11.5,13.7Q8.1,17.8 2.9,17.1Q-2.4,16.5 -6.8,14.7Q-11.2,12.9 -14.2,9.0Q-17.2,5.1 -15.9,0.4Q-14.5,-4.3 -12.9,-8.6Q-11.2,-12.9 -6.9,-15.3Q-2.5,-17.6 2.9,-18.0Q8.4,-18.4 10.3,-13.1Q12.3,-7.9 14.5,-3.9Z\"/><circle cx=\"-7.4\" cy=\"21.3\" r=\"2.9\"/><circle cx=\"-7.7\" cy=\"-20.9\" r=\"3.2\"/><circle cx=\"25.3\" cy=\"-5.7\" r=\"2.6\"/>", "<path d=\"M15.1,-4.2Q17.3,0.0 15.1,4.1Q12.9,8.3 10.4,12.8Q7.9,17.3 2.9,15.9Q-2.1,14.6 -6.6,13.7Q-11.2,12.9 -12.9,8.6Q-14.7,4.3 -15.3,-0.2Q-15.8,-4.6 -15.2,-10.7Q-14.5,-16.7 -8.3,-15.6Q-2.1,-14.5 2.4,-14.7Q6.8,-14.9 9.9,-11.6Q12.9,-8.3 15.1,-4.2Z\"/><circle cx=\"-16.4\" cy=\"22.7\" r=\"2.1\"/><circle cx=\"-19.1\" cy=\"-15.4\" r=\"2.8\"/><circle cx=\"-21.8\" cy=\"7.5\" r=\"2.3\"/>"], live=0;
+  addEventListener('pointerdown',function(e){
+    if(e.pointerType!=='mouse'||e.button!==0||live>7) return;
+    var t=e.target; if(!t.closest||t.closest('input,textarea,select')) return;
+    var hot=t.closest('a,button,label,.frame,.opt,.drop,[role=button]');
+    var d=document.createElement('div'); d.className='splat'; d.setAttribute('aria-hidden','true');
+    d.style.left=e.clientX+'px'; d.style.top=e.clientY+'px';
+    d.innerHTML='<svg viewBox="-32 -32 64 64"><g transform="rotate('+(Math.random()*360|0)+')" fill="'+(hot?'#ff6a4d':'#7b61ff')+'">'+S[Math.random()*S.length|0]+
+      '</g><ellipse cx="-5" cy="-6" rx="6" ry="3" fill="#fff" opacity=".32" transform="rotate(-30)"/></svg>';
+    document.body.appendChild(d); live++;
+    d.addEventListener('animationend',function(){d.remove();live--;});
+  },{passive:true});
+})();
+</script>
+</body>
+</html>
