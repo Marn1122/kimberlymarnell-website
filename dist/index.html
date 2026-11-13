@@ -33,7 +33,7 @@
   --radius:18px;
   color-scheme:dark;
 }
-@media (prefers-color-scheme: light){
+@media not all{ /* dark gallery look for every visitor (Kimberly 11/13) */
   :root:not([data-theme="dark"]){
     --bg:#f6f4f1; --surface:#ffffff; --line:#e3e0db; --fg:#141317; --muted:#6c6a73;
     --glow-a:#6c5cff; --glow-b:#ff6a4d; --accent:#b8860b; color-scheme:light;
@@ -68,7 +68,7 @@ img{display:block;max-width:100%}
   background:radial-gradient(circle at 45% 55%,var(--glow-a) 0%,transparent 55%),radial-gradient(circle at 25% 85%,var(--glow-b) 0%,transparent 45%);
   filter:blur(60px);opacity:.55;animation:drift 18s ease-in-out infinite alternate}
 @keyframes drift{to{transform:translate(8%,6%) scale(1.08)}}
-.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:end}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:end}
 .eyebrow{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 20px}
 h1{font-size:clamp(44px,7.2vw,104px);line-height:.95;letter-spacing:-.045em;font-weight:500;margin:0;text-wrap:balance}
 h1 em,h2 em{font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing:-.01em}
@@ -294,15 +294,10 @@ footer{padding-block:40px 56px;color:var(--muted);font-size:13px;display:flex;fl
 <nav class="nav" aria-label="Main">
   <ul>
     <li><a class="home" href="#top">Kimberly Marnell</a></li>
-    <li><a href="prints.html">Shop prints</a></li>
-    <li><a href="collect.html">Collect originals</a></li>
-    <li><a href="#work">Work</a></li>
-    <li><a href="gallery.html">3D Gallery</a></li>
-    <li><a href="#commissions">Commissions</a></li>
-    <li><a href="designers.html">For designers</a></li>
+    <li><a href="collect.html">Originals</a></li>
+    <li><a href="prints.html">Prints</a></li>
+    <li><a href="commission.html">Commissions</a></li>
     <li><a href="journal.html">Journal</a></li>
-    <li><a href="#photography">Photography</a></li>
-    <li><a href="https://www.havenmediaexperts.com/">Haven Media</a></li>
     <li><a href="#about">About</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
@@ -313,41 +308,30 @@ footer{padding-block:40px 56px;color:var(--muted);font-size:13px;display:flex;fl
     <div>
       <p class="eyebrow">Painter &amp; photographer · Irvine, California</p>
       <h1>The figure and the natural world, in <em>quiet dialogue.</em></h1>
-      <p class="lede">Paintings of women, flowers and the California coast. Bring a piece home with fine art prints from $40, or collect a one-of-a-kind original.</p>
+      <p class="lede">Original paintings of women, flowers and the California coast. One of a kind, signed, and available directly from the artist.</p>
       <div class="cta">
-        <a class="btn solid" href="prints.html">Shop prints from $40</a>
-        <a class="btn" href="collect.html">Collect an original</a>
-        <a class="btn" href="commission.html">Book a commission</a>
+        <a class="btn solid" href="collect.html">Collect an original</a>
+        <a class="btn" href="commission.html">Commission a painting</a>
+      </div>
+      <p class="lede" style="font-size:15px;margin-top:18px"><a href="prints.html">Fine art prints from $40 →</a></p>
+      <div hidden>
       </div>
     </div>
     <figure class="hero-art">
-      <button class="frame slides" id="slides" data-full="img/communion-with-the-earth.jpg" data-cap="Communion with the Earth|Oil on canvas · 36 × 48 in · 2026" aria-label="Enlarge Communion with the Earth">
-        <img class="on" src="img/communion-with-the-earth.jpg" alt="Communion with the Earth: a woman draped in rose fabric kneels toward a cluster of yellow flowers, monstera leaves around her." style="--ar:4/3" data-cap="Communion with the Earth|Oil on canvas · 36 × 48 in · 2026" data-line="&lt;b&gt;Communion with the Earth&lt;/b&gt;, 2026 · from &lt;i&gt;A Field of Forgotten Things&lt;/i&gt;">
-        <img src="img/the-comfort-of-frosting.jpg" alt="The Comfort of Frosting" style="--ar:4/3" loading="lazy" data-cap="The Comfort of Frosting|Oil on canvas · 18 × 24 in · 2023" data-line="&lt;b&gt;The Comfort of Frosting&lt;/b&gt;, 2023 · from &lt;i&gt;Time for Something for You&lt;/i&gt;">
-        <img src="img/appealing-tides-of-excess.jpg" alt="Appealing Tides of Excess" style="--ar:4/3" loading="lazy" data-cap="Appealing Tides of Excess|Watercolor on paper · 18 × 24 in · 2024" data-line="&lt;b&gt;Appealing Tides of Excess&lt;/b&gt;, 2024 · from &lt;i&gt;Time for Something for You&lt;/i&gt;">
-        <img src="img/blue-vibes.jpg" alt="Blue Vibes" style="--ar:4/3" loading="lazy" data-cap="Blue Vibes|Oil on canvas · 6 × 10 in · 2024" data-line="&lt;b&gt;Blue Vibes&lt;/b&gt;, 2024 · from &lt;i&gt;West Coast&lt;/i&gt;">
+      <button class="frame slides" id="slides" data-full="img/the-comfort-of-frosting.jpg" data-cap="The Comfort of Frosting|Oil on canvas · 18 × 24 in · 2023" aria-label="Enlarge The Comfort of Frosting">
+        <img class="on" src="img/the-comfort-of-frosting.jpg" alt="The Comfort of Frosting" style="--ar:4/3" data-cap="The Comfort of Frosting|Oil on canvas · 18 × 24 in · 2023" data-line="&lt;b&gt;The Comfort of Frosting&lt;/b&gt;, 2023 · from &lt;i&gt;Time for Something for You&lt;/i&gt;">
+        <img loading="lazy" src="img/appealing-tides-of-excess.jpg" alt="Appealing Tides of Excess" style="--ar:4/3" data-cap="Appealing Tides of Excess|Watercolor on paper · 18 × 24 in · 2024" data-line="&lt;b&gt;Appealing Tides of Excess&lt;/b&gt;, 2024 · from &lt;i&gt;Time for Something for You&lt;/i&gt;">
+        <img loading="lazy" src="img/communion-with-the-earth.jpg" alt="Communion with the Earth: a woman draped in rose fabric kneels toward a cluster of yellow flowers, monstera leaves around her." style="--ar:4/3" data-cap="Communion with the Earth|Oil on canvas · 36 × 48 in · 2026" data-line="&lt;b&gt;Communion with the Earth&lt;/b&gt;, 2026 · from &lt;i&gt;A Field of Forgotten Things&lt;/i&gt;">
+        <img src="img/queen-of-the-night.jpg" alt="Queen of the Night" style="--ar:4/3" loading="lazy" data-cap="Queen of the Night|Watercolor, acrylic marker and ink · 24 × 18 in · 2026" data-line="&lt;b&gt;Queen of the Night&lt;/b&gt;, 2026 · from &lt;i&gt;A Field of Forgotten Things&lt;/i&gt;">
       </button>
-      <figcaption id="slide-cap"><b>Communion with the Earth</b>, 2026 · from <i>A Field of Forgotten Things</i></figcaption>
+      <figcaption id="slide-cap"><b>The Comfort of Frosting</b>, 2023 · from <i>Time for Something for You</i></figcaption>
     </figure>
   </div>
 </header>
 
 <hr class="rule">
 
-<section id="prints" aria-labelledby="prints-title">
-  <div class="wrap">
-    <div class="list-card">
-      <a href="prints.html" aria-label="Explore The Comfort of Frosting fine art prints" style="display:block;max-width:480px;flex:1"><img src="img/the-comfort-of-frosting.jpg" alt="An imagined celebration by the sea, with cakes, period dress and a star-filled sky." loading="lazy" style="width:100%;height:auto;border-radius:12px"></a>
-      <div style="flex:1">
-        <span class="badge">Fine art prints · From $40</span>
-        <h3 id="prints-title">A little sweetness <em style="font-family:var(--serif)">by the sea.</em></h3>
-        <p>Bring <i>The Comfort of Frosting</i> into your space as a fine art paper or canvas print. Choose your format and size online; Saatchi Art prints and ships your order.</p>
-        <a class="btn solid" href="prints.html">See print sizes &amp; prices</a>
-        <p style="font-size:13px">Reproductions of Kimberly’s original painting. Prices in USD; final shipping, tax and options shown at checkout.</p>
-      </div>
-    </div>
-  </div>
-</section>
+
 
 <hr class="rule">
 
@@ -388,16 +372,43 @@ footer{padding-block:40px 56px;color:var(--muted);font-size:13px;display:flex;fl
       </article>
 
       <article class="series-block">
+        <div class="row-head"><div class="series-title"><h3>Time for Something for You</h3><span>2023 – 2025</span></div><div class="row-nav"><button type="button" class="rp" aria-label="Scroll back">←</button><button type="button" class="rn" aria-label="Scroll forward">→</button></div></div>
+        <p>Indulgence and excess, painted with a wink: frosting, confections and the cost of having everything.</p>
+        <div class="row" data-row>
+          <div id="w-the-comfort-of-frosting" class="work w6">
+            <button class="frame" data-full="img/the-comfort-of-frosting.jpg" data-cap="The Comfort of Frosting|Oil on canvas · 18 × 24 in · 2023" aria-label="Enlarge The Comfort of Frosting"><img src="img/the-comfort-of-frosting.jpg" alt="The Comfort of Frosting" style="--ar:4/3" loading="lazy"></button>
+            <div class="label"><span class="t"><a href="the-comfort-of-frosting.html" style="text-decoration:none">The Comfort of Frosting</a></span><span class="p">$2,600</span><span class="m">Oil on canvas · 18 × 24 in · 2023</span><span class="act"><a class="buy" href="https://pay.bluevine.com/p/bc24fd5b4349443fb54e446239c274a7" target="_blank" rel="noopener">Buy now</a> · <a href="the-comfort-of-frosting.html">Details</a></span></div>
+          </div>
+          <div id="w-appealing-tides-of-excess" class="work w6">
+            <button class="frame" data-full="img/appealing-tides-of-excess.jpg" data-cap="Appealing Tides of Excess|Watercolor on paper · 18 × 24 in · 2024" aria-label="Enlarge Appealing Tides of Excess"><img src="img/appealing-tides-of-excess.jpg" alt="Appealing Tides of Excess" style="--ar:4/3" loading="lazy"></button>
+            <div class="label"><span class="t"><a href="appealing-tides-of-excess.html" style="text-decoration:none">Appealing Tides of Excess</a></span><span class="p">$2,600</span><span class="m">Watercolor on paper · 18 × 24 in · 2024</span><span class="act"><a class="buy" href="https://pay.bluevine.com/p/23d07117242f4d06b17e5237744458a2" target="_blank" rel="noopener">Buy now</a> · <a href="appealing-tides-of-excess.html">Details</a></span></div>
+          </div>
+          <div id="w-before-the-taste" class="work">
+            <button class="frame" data-full="img/before-the-taste.jpg" data-cap="Before the Taste|Acrylic on linen, hand-built side table · 20 × 16 × 16 in · 2025" aria-label="Enlarge Before the Taste"><img src="img/before-the-taste.jpg" alt="Before the Taste" style="--ar:3/4" loading="lazy"></button>
+            <div class="label"><span class="t"><a href="before-the-taste.html" style="text-decoration:none">Before the Taste</a></span><span class="p">$5,000</span><span class="m">Functional art · side table · 2025</span><span class="act"><a href="mailto:kimberlysartandphotography@gmail.com?subject=Inquiry%3A%20Before%20the%20Taste&amp;body=Hi%20Kimberly%2C%0A%0AI%20am%20interested%20in%20Before%20the%20Taste%20%28functional%20art%20side%20table%2C%20%245%2C000%29.%0A%0AName%3A%0ACity%2C%20State%3A%0A">Inquire</a> · <a href="before-the-taste.html">Details</a></span></div>
+          </div>
+          <div id="w-new-beginnings" class="work">
+            <button class="frame" data-full="img/new-beginnings.jpg" data-cap="New Beginnings|Gouache on paper · 18 × 24 in · 2025" aria-label="Enlarge New Beginnings"><img src="img/new-beginnings.jpg" alt="New Beginnings" style="--ar:3/4" loading="lazy"></button>
+            <div class="label"><span class="t"><a href="new-beginnings.html" style="text-decoration:none">New Beginnings</a></span><span class="p">$2,600</span><span class="m">Gouache on paper · 18 × 24 in · 2025</span><span class="act"><a class="buy" href="https://pay.bluevine.com/p/e8ed01d5c72a438dbf43207e64272a56" target="_blank" rel="noopener">Buy now</a> · <a href="new-beginnings.html">Details</a></span></div>
+          </div>
+          <div id="w-ghostly-glow" class="work">
+            <button class="frame" data-full="img/ghostly-glow.jpg" data-cap="Ghostly Glow|Acrylic on canvas · 11 × 14 in · 2025" aria-label="Enlarge Ghostly Glow"><img src="img/ghostly-glow.jpg" alt="Ghostly Glow" style="--ar:3/4" loading="lazy"></button>
+            <div class="label"><span class="t"><a href="ghostly-glow.html" style="text-decoration:none">Ghostly Glow</a></span><span class="p">$2,000</span><span class="m">Acrylic on canvas · 11 × 14 in · 2025</span><span class="act"><a href="https://www.saatchiart.com/art/Painting-Ghostly-Glow/1035491/14328681/view" target="_blank" rel="noopener">Buy on Saatchi</a> · <a href="ghostly-glow.html">Details</a></span></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="series-block">
         <div class="row-head"><div class="series-title"><h3>A Field of Forgotten Things</h3><span>2026 · new series</span></div><div class="row-nav"><button type="button" class="rp" aria-label="Scroll back">←</button><button type="button" class="rn" aria-label="Scroll forward">→</button></div></div>
         <p>Flowers that bloom at night recur through this series: growth that needs no audience and no ideal conditions, something that develops quietly in the dark and opens when the time is right.</p>
         <div class="row" data-row>
           <div id="w-communion-with-the-earth" class="work w8">
             <button class="frame" data-full="img/communion-with-the-earth.jpg" data-cap="Communion with the Earth|Oil on canvas · 36 × 48 in · 2026" aria-label="Enlarge Communion with the Earth"><img src="img/communion-with-the-earth.jpg" alt="Communion with the Earth" style="--ar:4/3" loading="lazy"></button>
-            <div class="label"><span class="t">Communion with the Earth</span><span class="p">$10,400</span><span class="m">Oil on canvas · 36 × 48 in · 2026</span><span class="act"><a class="buy" href="mailto:kimberlysartandphotography@gmail.com?subject=Reserve%3A%20Communion%20with%20the%20Earth&amp;body=Hi%20Kimberly%2C%0A%0AI%20would%20like%20to%20reserve%20Communion%20with%20the%20Earth%20%28oil%20on%20canvas%2C%2036%20%C3%97%2048%20in%2C%202026%2C%20%2410%2C400%29.%0A%0AName%3A%0ACity%2C%20State%3A%0APhone%20%28optional%29%3A%0A%0APlease%20send%20me%20an%20invoice%20for%20payment%20by%20bank%20transfer.%0A">Reserve</a></span></div>
+            <div class="label"><span class="t"><a href="communion-with-the-earth.html" style="text-decoration:none">Communion with the Earth</a></span><span class="p">$10,400</span><span class="m">Oil on canvas · 36 × 48 in · 2026</span><span class="act"><a class="buy" href="mailto:kimberlysartandphotography@gmail.com?subject=Reserve%3A%20Communion%20with%20the%20Earth&amp;body=Hi%20Kimberly%2C%0A%0AI%20would%20like%20to%20reserve%20Communion%20with%20the%20Earth%20%28oil%20on%20canvas%2C%2036%20%C3%97%2048%20in%2C%202026%2C%20%2410%2C400%29.%0A%0AName%3A%0ACity%2C%20State%3A%0APhone%20%28optional%29%3A%0A%0APlease%20send%20me%20an%20invoice%20for%20payment%20by%20bank%20transfer.%0A">Reserve</a> · <a href="communion-with-the-earth.html">Details</a></span></div>
           </div>
           <div id="w-queen-of-the-night" class="work">
             <button class="frame" data-full="img/queen-of-the-night.jpg" data-cap="Queen of the Night|Watercolor, acrylic marker and ink · 24 × 18 in · 2026" aria-label="Enlarge Queen of the Night"><img src="img/queen-of-the-night.jpg" alt="Queen of the Night" style="--ar:3/4" loading="lazy"></button>
-            <div class="label"><span class="t">Queen of the Night</span><span class="p">$2,600</span><span class="m">Watercolor, acrylic marker &amp; ink · 24 × 18 in · 2026</span><span class="act"><a class="buy" href="https://pay.bluevine.com/p/91028cd1413748419e020d2d4b60667d" target="_blank" rel="noopener">Buy now</a></span></div>
+            <div class="label"><span class="t"><a href="queen-of-the-night.html" style="text-decoration:none">Queen of the Night</a></span><span class="p">$2,600</span><span class="m">Watercolor, acrylic marker &amp; ink · 24 × 18 in · 2026</span><span class="act"><a class="buy" href="https://pay.bluevine.com/p/91028cd1413748419e020d2d4b60667d" target="_blank" rel="noopener">Buy now</a> · <a href="queen-of-the-night.html">Details</a></span></div>
           </div>
         </div>
       </article>
@@ -408,23 +419,23 @@ footer{padding-block:40px 56px;color:var(--muted);font-size:13px;display:flex;fl
         <div class="row" data-row>
           <div id="w-beautiful-wall-flower" class="work">
             <button class="frame" data-full="img/flower-power.jpg" data-cap="Beautiful Wall Flower|Oil on canvas · 24 × 18 in · 2023" aria-label="Enlarge Beautiful Wall Flower"><img src="img/flower-power.jpg" alt="Beautiful Wall Flower" style="--ar:3/4" loading="lazy"></button>
-            <div class="label"><span class="t">Beautiful Wall Flower</span><span class="p">Price on request</span><span class="m">Oil on canvas · 24 × 18 in · 2023</span><span class="act"><a class="buy" href="mailto:kimberlysartandphotography@gmail.com?subject=Reserve%3A%20Beautiful%20Wall%20Flower&amp;body=Hi%20Kimberly%2C%0A%0AI%20would%20like%20to%20reserve%20Beautiful%20Wall%20Flower%20%28oil%20on%20canvas%2C%2024%20%C3%97%2018%20in%2C%202023%29.%20Please%20send%20me%20the%20price%20and%20details.%0A%0AName%3A%0ACity%2C%20State%3A%0APhone%20%28optional%29%3A%0A%0APlease%20send%20me%20an%20invoice%20for%20payment%20by%20bank%20transfer.%0A">Reserve</a></span></div>
+            <div class="label"><span class="t"><a href="beautiful-wall-flower.html" style="text-decoration:none">Beautiful Wall Flower</a></span><span class="p">Price on request</span><span class="m">Oil on canvas · 24 × 18 in · 2023</span><span class="act"><a class="buy" href="mailto:kimberlysartandphotography@gmail.com?subject=Reserve%3A%20Beautiful%20Wall%20Flower&amp;body=Hi%20Kimberly%2C%0A%0AI%20would%20like%20to%20reserve%20Beautiful%20Wall%20Flower%20%28oil%20on%20canvas%2C%2024%20%C3%97%2018%20in%2C%202023%29.%20Please%20send%20me%20the%20price%20and%20details.%0A%0AName%3A%0ACity%2C%20State%3A%0APhone%20%28optional%29%3A%0A%0APlease%20send%20me%20an%20invoice%20for%20payment%20by%20bank%20transfer.%0A">Reserve</a> · <a href="beautiful-wall-flower.html">Details</a></span></div>
           </div>
           <div id="w-flourish" class="work">
             <button class="frame" data-full="img/flourish.jpg" data-cap="Flourish|Oil on canvas · 14 × 11 in · 2023" aria-label="Enlarge Flourish"><img src="img/flourish.jpg" alt="Flourish" style="--ar:3/4" loading="lazy"></button>
-            <div class="label"><span class="t">Flourish</span><span class="p">$1,500</span><span class="m">Oil on canvas · 14 × 11 in · 2023</span><span class="act"><a class="buy" href="https://pay.bluevine.com/p/bb693256e8b243949bc29787ff58d15d" target="_blank" rel="noopener">Buy now</a></span></div>
+            <div class="label"><span class="t"><a href="flourish.html" style="text-decoration:none">Flourish</a></span><span class="p">$1,500</span><span class="m">Oil on canvas · 14 × 11 in · 2023</span><span class="act"><a class="buy" href="https://pay.bluevine.com/p/bb693256e8b243949bc29787ff58d15d" target="_blank" rel="noopener">Buy now</a> · <a href="flourish.html">Details</a></span></div>
           </div>
           <div id="w-impossible-traffic" class="work">
             <button class="frame" data-full="img/impossible-traffic.jpg" data-cap="Impossible Traffic|Oil on paper · 2023" aria-label="Enlarge Impossible Traffic"><img src="img/impossible-traffic.jpg" alt="Impossible Traffic" style="--ar:3/4" loading="lazy"></button>
-            <div class="label"><span class="t">Impossible Traffic</span><span class="p">$1,500</span><span class="m">Oil · 2023</span><span class="act"><a class="buy" href="https://pay.bluevine.com/p/b247ba669f7e40d7af80056336f0a284" target="_blank" rel="noopener">Buy now</a></span></div>
+            <div class="label"><span class="t"><a href="impossible-traffic.html" style="text-decoration:none">Impossible Traffic</a></span><span class="p">$1,500</span><span class="m">Oil · 2023</span><span class="act"><a class="buy" href="https://pay.bluevine.com/p/b247ba669f7e40d7af80056336f0a284" target="_blank" rel="noopener">Buy now</a> · <a href="impossible-traffic.html">Details</a></span></div>
           </div>
           <div id="w-my-body" class="work w6">
             <button class="frame" data-full="img/my-body.jpg" data-cap="My Body|Charcoal on cotton paper · 24 × 18 in · 2022" aria-label="Enlarge My Body"><img src="img/my-body.jpg" alt="My Body" style="--ar:4/5" loading="lazy"></button>
-            <div class="label"><span class="t">My Body</span><span class="p">$2,600</span><span class="m">Charcoal on cotton paper · 24 × 18 in · 2022</span><span class="act"><a class="buy" href="https://pay.bluevine.com/p/93d40d6841584ba5823933ab5fdc313a" target="_blank" rel="noopener">Buy now</a></span></div>
+            <div class="label"><span class="t"><a href="my-body.html" style="text-decoration:none">My Body</a></span><span class="p">$2,600</span><span class="m">Charcoal on cotton paper · 24 × 18 in · 2022</span><span class="act"><a class="buy" href="https://pay.bluevine.com/p/93d40d6841584ba5823933ab5fdc313a" target="_blank" rel="noopener">Buy now</a> · <a href="my-body.html">Details</a></span></div>
           </div>
           <div id="w-comfy" class="work w6">
             <button class="frame" data-full="img/comfy.jpg" data-cap="Comfy|Charcoal on paper · 11 × 8 in · 2023" aria-label="Enlarge Comfy"><img src="img/comfy.jpg" alt="Comfy" style="--ar:4/5" loading="lazy"></button>
-            <div class="label"><span class="t">Comfy</span><span class="p">$1,500</span><span class="m">Charcoal on paper · 11 × 8 in · 2023</span><span class="act"><a class="buy" href="https://pay.bluevine.com/p/69a5b6e71e0b4080bb9dea0b92bc9cb2" target="_blank" rel="noopener">Buy now</a></span></div>
+            <div class="label"><span class="t"><a href="comfy.html" style="text-decoration:none">Comfy</a></span><span class="p">$1,500</span><span class="m">Charcoal on paper · 11 × 8 in · 2023</span><span class="act"><a class="buy" href="https://pay.bluevine.com/p/69a5b6e71e0b4080bb9dea0b92bc9cb2" target="_blank" rel="noopener">Buy now</a> · <a href="comfy.html">Details</a></span></div>
           </div>
         </div>
       </article>
@@ -435,54 +446,45 @@ footer{padding-block:40px 56px;color:var(--muted);font-size:13px;display:flex;fl
         <div class="row" data-row>
           <div id="w-golden-hour" class="work">
             <button class="frame" data-full="img/golden-hour.jpg" data-cap="Golden Hour|Oil on canvas · 24 × 18 in · 2024" aria-label="Enlarge Golden Hour"><img src="img/golden-hour.jpg" alt="Golden Hour" style="--ar:3/4" loading="lazy"></button>
-            <div class="label"><span class="t">Golden Hour</span><span class="p">$2,600</span><span class="m">Oil on canvas · 24 × 18 in · 2024</span><span class="act"><a class="buy" href="https://pay.bluevine.com/p/8698eec1870a433f9008e3293f392963" target="_blank" rel="noopener">Buy now</a></span></div>
+            <div class="label"><span class="t"><a href="golden-hour.html" style="text-decoration:none">Golden Hour</a></span><span class="p">$2,600</span><span class="m">Oil on canvas · 24 × 18 in · 2024</span><span class="act"><a class="buy" href="https://pay.bluevine.com/p/8698eec1870a433f9008e3293f392963" target="_blank" rel="noopener">Buy now</a> · <a href="golden-hour.html">Details</a></span></div>
           </div>
           <div id="w-take-me-back" class="work">
             <button class="frame" data-full="img/take-me-back.jpg" data-cap="Take Me Back|Watercolor · 24 × 18 in · 2023" aria-label="Enlarge Take Me Back"><img src="img/take-me-back.jpg" alt="Take Me Back" style="--ar:3/4" loading="lazy"></button>
-            <div class="label"><span class="t">Take Me Back</span><span class="p">$2,600</span><span class="m">Watercolor · 24 × 18 in · 2023</span><span class="act"><a class="buy" href="https://pay.bluevine.com/p/b8f4179cad2f44e797e10085c0237dcb" target="_blank" rel="noopener">Buy now</a></span></div>
+            <div class="label"><span class="t"><a href="take-me-back.html" style="text-decoration:none">Take Me Back</a></span><span class="p">$2,600</span><span class="m">Watercolor · 24 × 18 in · 2023</span><span class="act"><a class="buy" href="https://pay.bluevine.com/p/b8f4179cad2f44e797e10085c0237dcb" target="_blank" rel="noopener">Buy now</a> · <a href="take-me-back.html">Details</a></span></div>
           </div>
           <div id="w-going-home" class="work">
             <button class="frame" data-full="img/going-home.jpg" data-cap="Going Home|Acrylic on paper · 24 × 18 in · 2022" aria-label="Enlarge Going Home"><img src="img/going-home.jpg" alt="Going Home" style="--ar:3/4" loading="lazy"></button>
-            <div class="label"><span class="t">Going Home</span><span class="p">$2,600</span><span class="m">Acrylic on paper · 24 × 18 in · 2022</span><span class="act"><a class="buy" href="https://pay.bluevine.com/p/2499c431a8884d76ba2bc0ab5b51a43b" target="_blank" rel="noopener">Buy now</a></span></div>
+            <div class="label"><span class="t"><a href="going-home.html" style="text-decoration:none">Going Home</a></span><span class="p">$2,600</span><span class="m">Acrylic on paper · 24 × 18 in · 2022</span><span class="act"><a class="buy" href="https://pay.bluevine.com/p/2499c431a8884d76ba2bc0ab5b51a43b" target="_blank" rel="noopener">Buy now</a> · <a href="going-home.html">Details</a></span></div>
           </div>
           <div id="w-look-me-in-the-eye" class="work w6">
             <button class="frame" data-full="img/look-me-in-the-eye.jpg" data-cap="Look Me in the Eye|Watercolor · 7 × 15 in · 2024" aria-label="Enlarge Look Me in the Eye"><img src="img/look-me-in-the-eye.jpg" alt="Look Me in the Eye" style="--ar:2/1" loading="lazy"></button>
-            <div class="label"><span class="t">Look Me in the Eye</span><span class="p">$1,500</span><span class="m">Watercolor · 7 × 15 in · 2024</span><span class="act"><a class="buy" href="https://pay.bluevine.com/p/313a43052f984c728d1f2ea5e4bb782a" target="_blank" rel="noopener">Buy now</a></span></div>
+            <div class="label"><span class="t"><a href="look-me-in-the-eye.html" style="text-decoration:none">Look Me in the Eye</a></span><span class="p">$1,500</span><span class="m">Watercolor · 7 × 15 in · 2024</span><span class="act"><a class="buy" href="https://pay.bluevine.com/p/313a43052f984c728d1f2ea5e4bb782a" target="_blank" rel="noopener">Buy now</a> · <a href="look-me-in-the-eye.html">Details</a></span></div>
           </div>
           <div id="w-blue-vibes" class="work w6">
             <button class="frame" data-full="img/blue-vibes.jpg" data-cap="Blue Vibes|Oil on canvas · 6 × 10 in · 2024" aria-label="Enlarge Blue Vibes"><img src="img/blue-vibes.jpg" alt="Blue Vibes" style="--ar:3/2" loading="lazy"></button>
-            <div class="label"><span class="t">Blue Vibes</span><span class="p">$1,500</span><span class="m">Oil on canvas · 6 × 10 in · 2024</span><span class="act"><a class="buy" href="https://pay.bluevine.com/p/7907f98280ba4642807ad86fb5ac9ae3" target="_blank" rel="noopener">Buy now</a></span></div>
+            <div class="label"><span class="t"><a href="blue-vibes.html" style="text-decoration:none">Blue Vibes</a></span><span class="p">$1,500</span><span class="m">Oil on canvas · 6 × 10 in · 2024</span><span class="act"><a class="buy" href="https://pay.bluevine.com/p/7907f98280ba4642807ad86fb5ac9ae3" target="_blank" rel="noopener">Buy now</a> · <a href="blue-vibes.html">Details</a></span></div>
           </div>
         </div>
       </article>
 
-      <article class="series-block">
-        <div class="row-head"><div class="series-title"><h3>Time for Something for You</h3><span>2023 – 2025</span></div><div class="row-nav"><button type="button" class="rp" aria-label="Scroll back">←</button><button type="button" class="rn" aria-label="Scroll forward">→</button></div></div>
-        <p>Indulgence and excess, painted with a wink: frosting, confections and the cost of having everything.</p>
-        <div class="row" data-row>
-          <div id="w-the-comfort-of-frosting" class="work w6">
-            <button class="frame" data-full="img/the-comfort-of-frosting.jpg" data-cap="The Comfort of Frosting|Oil on canvas · 18 × 24 in · 2023" aria-label="Enlarge The Comfort of Frosting"><img src="img/the-comfort-of-frosting.jpg" alt="The Comfort of Frosting" style="--ar:4/3" loading="lazy"></button>
-            <div class="label"><span class="t">The Comfort of Frosting</span><span class="p">$2,600</span><span class="m">Oil on canvas · 18 × 24 in · 2023</span><span class="act"><a class="buy" href="https://pay.bluevine.com/p/bc24fd5b4349443fb54e446239c274a7" target="_blank" rel="noopener">Buy now</a></span></div>
-          </div>
-          <div id="w-appealing-tides-of-excess" class="work w6">
-            <button class="frame" data-full="img/appealing-tides-of-excess.jpg" data-cap="Appealing Tides of Excess|Watercolor on paper · 18 × 24 in · 2024" aria-label="Enlarge Appealing Tides of Excess"><img src="img/appealing-tides-of-excess.jpg" alt="Appealing Tides of Excess" style="--ar:4/3" loading="lazy"></button>
-            <div class="label"><span class="t">Appealing Tides of Excess</span><span class="p">$2,600</span><span class="m">Watercolor on paper · 18 × 24 in · 2024</span><span class="act"><a class="buy" href="https://pay.bluevine.com/p/23d07117242f4d06b17e5237744458a2" target="_blank" rel="noopener">Buy now</a></span></div>
-          </div>
-          <div id="w-before-the-taste" class="work">
-            <button class="frame" data-full="img/before-the-taste.jpg" data-cap="Before the Taste|Acrylic on linen, hand-built side table · 20 × 16 × 16 in · 2025" aria-label="Enlarge Before the Taste"><img src="img/before-the-taste.jpg" alt="Before the Taste" style="--ar:3/4" loading="lazy"></button>
-            <div class="label"><span class="t">Before the Taste</span><span class="p">$5,000</span><span class="m">Functional art · side table · 2025</span><span class="act"><a href="mailto:kimberlysartandphotography@gmail.com?subject=Inquiry%3A%20Before%20the%20Taste&amp;body=Hi%20Kimberly%2C%0A%0AI%20am%20interested%20in%20Before%20the%20Taste%20%28functional%20art%20side%20table%2C%20%245%2C000%29.%0A%0AName%3A%0ACity%2C%20State%3A%0A">Inquire</a></span></div>
-          </div>
-          <div id="w-new-beginnings" class="work">
-            <button class="frame" data-full="img/new-beginnings.jpg" data-cap="New Beginnings|Gouache on paper · 18 × 24 in · 2025" aria-label="Enlarge New Beginnings"><img src="img/new-beginnings.jpg" alt="New Beginnings" style="--ar:3/4" loading="lazy"></button>
-            <div class="label"><span class="t">New Beginnings</span><span class="p">$2,600</span><span class="m">Gouache on paper · 18 × 24 in · 2025</span><span class="act"><a class="buy" href="https://pay.bluevine.com/p/e8ed01d5c72a438dbf43207e64272a56" target="_blank" rel="noopener">Buy now</a></span></div>
-          </div>
-          <div id="w-ghostly-glow" class="work">
-            <button class="frame" data-full="img/ghostly-glow.jpg" data-cap="Ghostly Glow|Acrylic on canvas · 11 × 14 in · 2025" aria-label="Enlarge Ghostly Glow"><img src="img/ghostly-glow.jpg" alt="Ghostly Glow" style="--ar:3/4" loading="lazy"></button>
-            <div class="label"><span class="t">Ghostly Glow</span><span class="p">$2,000</span><span class="m">Acrylic on canvas · 11 × 14 in · 2025</span><span class="act"><a href="https://www.saatchiart.com/art/Painting-Ghostly-Glow/1035491/14328681/view" target="_blank" rel="noopener">Buy on Saatchi</a></span></div>
-          </div>
-        </div>
-      </article>
 
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section id="prints" aria-labelledby="prints-title">
+  <div class="wrap">
+    <div class="list-card">
+      <a href="prints.html" aria-label="Explore The Comfort of Frosting fine art prints" style="display:block;max-width:480px;flex:1"><img src="img/the-comfort-of-frosting.jpg" alt="An imagined celebration by the sea, with cakes, period dress and a star-filled sky." loading="lazy" style="width:100%;height:auto;border-radius:12px"></a>
+      <div style="flex:1">
+        <span class="badge">Fine art prints · From $40</span>
+        <h3 id="prints-title">A little sweetness <em style="font-family:var(--serif)">by the sea.</em></h3>
+        <p>Bring <i>The Comfort of Frosting</i> into your space as a fine art paper or canvas print. Choose your format and size online; Saatchi Art prints and ships your order.</p>
+        <a class="btn solid" href="prints.html">See print sizes &amp; prices</a>
+        <p style="font-size:13px">Reproductions of Kimberly’s original painting. Prices in USD; final shipping, tax and options shown at checkout.</p>
+      </div>
     </div>
   </div>
 </section>

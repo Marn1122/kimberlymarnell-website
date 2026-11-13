@@ -1,0 +1,12 @@
+.crumb{margin-top:25px}.crumb a{margin-right:4px}
+.viewer .image{margin:0}.viewer .main{max-height:760px;object-fit:contain}.viewer .main-cap{margin-top:10px}
+.thumbs{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;margin:18px 0 10px}
+.thumb{all:unset;cursor:pointer;display:grid;gap:6px;font-size:11px;color:var(--muted);text-align:center;min-width:0}
+.thumb img{aspect-ratio:1;object-fit:cover;border:1px solid var(--line);opacity:.75;transition:opacity .2s,border-color .2s}
+.thumb:hover img,.thumb.on img{opacity:1;border-color:var(--accent)}
+.thumb:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.thumb span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.product .actions .btn+.btn{margin-left:0}
+.card h3 a{text-decoration:none}
+.series-row{padding-top:24px}.series-row>p{color:var(--muted);max-width:62ch}
+@media(max-width:760px){.thumbs{grid-template-columns:repeat(3,minmax(0,1fr))}}
