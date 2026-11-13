@@ -179,11 +179,12 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--fg)}
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=kimberly-k-20261103">
 <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png?v=kimberly-k-20261103">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=kimberly-k-20261103">
+<script src="brush.js" defer></script>
 </head>
 <body>
 <div class="wrap">
   <div class="top">
-    <a class="pill" href="index.html">← Kimberly Marnell</a>
+    <a class="pill" href="index.html">← Home</a>
     <a class="pill" href="designers.html">Interior designer? Start here ↗</a>
   </div>
 
@@ -213,7 +214,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--fg)}
         <fieldset>
           <legend>Subject</legend>
           <div class="opts">
-            <div class="opt"><input type="radio" name="subject" id="s-person" value="Person portrait" checked><label for="s-person"><b>Person</b><span>Portrait of one person</span></label></div>
+            <div class="opt"><input type="radio" name="subject" id="s-person" value="Person portrait"><label for="s-person"><b>Person</b><span>Portrait of one person</span></label></div>
             <div class="opt"><input type="radio" name="subject" id="s-pet" value="Pet portrait"><label for="s-pet"><b>Pet</b><span>Dog, cat, horse and more</span></label></div>
             <div class="opt"><input type="radio" name="subject" id="s-group" value="Couple or family"><label for="s-group"><b>Couple or family</b><span>People and pets together</span></label></div>
             <div class="opt"><input type="radio" name="subject" id="s-other" value="Something else"><label for="s-other"><b>Something else</b><span>A place, a home, an idea</span></label></div>
@@ -228,6 +229,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--fg)}
           <label for="occasion">Is it for an occasion? <span class="hint">(optional)</span></label>
           <input type="text" id="occasion" placeholder="Anniversary, memorial, birthday, just because…">
         </div>
+        <p class="err" id="err-1" hidden>Choose what Kimberly should paint to continue.</p>
         <div class="nav"><span></span><button type="button" class="btn solid next">Next: size &amp; style</button></div>
       </section>
 
@@ -264,6 +266,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--fg)}
             <div class="opt"><input type="radio" name="mood" id="c-match" value="Match my room"><label for="c-match"><b>Match my room</b><span>Tell us the colors</span></label></div>
           </div>
         </fieldset>
+        <p class="err" id="err-2" hidden>Choose a canvas size to continue.</p>
         <div class="nav"><button type="button" class="btn back">Back</button><button type="button" class="btn solid next">Next: reference photos</button></div>
       </section>
 
@@ -376,16 +379,16 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--fg)}
 
     <aside class="ticket" aria-live="polite" aria-label="Your price">
       <span class="k">Your commission</span>
-      <span class="sum" id="t-sum">16 × 20 in oil portrait</span>
+      <span class="sum" id="t-sum">Your price builds as you choose</span>
       <dl class="lines" id="t-lines"></dl>
-      <div class="total"><span>Total</span><b id="t-total">$800</b></div>
-      <div class="dep"><div><span id="t-dep-l">Deposit today (50%)</span><b id="t-dep">$400</b></div><div id="t-bal-row"><span>Balance before shipping</span><span id="t-bal">$400</span></div></div>
+      <div class="total"><span>Total</span><b id="t-total">—</b></div>
+      <div class="dep"><div><span id="t-dep-l">Deposit today (50%)</span><b id="t-dep">—</b></div><div id="t-bal-row"><span>Balance before shipping</span><span id="t-bal">—</span></div></div>
       <p class="fine">Includes a signed certificate of authenticity and fully insured shipping. Free in the US up to 24 × 36 in; larger sizes ship crated (+$175) or rolled in a tube for free. Shipping outside the US is quoted separately. Sales tax is added where required.</p>
     </aside>
   </div>
 </div>
 
-<div class="mobile-bar" aria-hidden="true"><div><span>Total</span><b id="m-total">$800</b></div><div style="text-align:right"><span id="m-dep-l">Deposit today</span><b id="m-dep">$400</b></div></div>
+<div class="mobile-bar" aria-hidden="true"><div><span>Total</span><b id="m-total">—</b></div><div style="text-align:right"><span id="m-dep-l">Deposit today</span><b id="m-dep">—</b></div></div>
 
 <script>
 (function(){
@@ -396,14 +399,14 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--fg)}
   var SIZES = [[8,10],[11,14],[12,16],[16,20],[18,24],[20,24],[24,30],[24,36],[30,40],[36,48]];
   var $ = function(id){return document.getElementById(id)};
   var money = function(n){return '$' + Math.round(n).toLocaleString('en-US')};
-  var state = {step:1, size:'16x20', count:1, photos:[]};
+  var state = {step:1, size:'', count:1, photos:[]};
 
   // sizes
   var sizesEl = $('sizes');
   SIZES.forEach(function(s){
     var id='z-'+s[0]+'x'+s[1], w=s[0], h=s[1], sc=46/Math.max(w,h);
     var d=document.createElement('div'); d.className='opt';
-    d.innerHTML='<input type="radio" name="size" id="'+id+'" value="'+w+'x'+h+'"'+(w===16&&h===20?' checked':'')+'>'+
+    d.innerHTML='<input type="radio" name="size" id="'+id+'" value="'+w+'x'+h+'"'+''+'>'+
       '<label for="'+id+'"><i class="size-box" style="width:'+Math.round(w*sc)+'px;height:'+Math.round(h*sc)+'px"></i><b>'+w+' × '+h+'</b><span data-sq="'+(w*h)+'"></span></label>';
     sizesEl.appendChild(d);
   });
@@ -422,6 +425,15 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--fg)}
     return {w:w,h:h,base:base,extra:extra,rush:rush,big:big,large:large,rolled:rolled,full:full,small:total<500,total:total,dep:dep,bal:total-dep};
   }
   function render(){
+    var subjNow=val('subject'), sizeNow=val('size');
+    document.querySelectorAll('[data-sq]').forEach(function(el){el.textContent=subjNow?money(+el.getAttribute('data-sq')*rate()):'';});
+    if(!subjNow||!sizeNow){
+      $('t-sum').textContent=subjNow?(subjNow+' · now choose a size'):'Choose what to paint and your price builds here';
+      $('t-lines').innerHTML=''; $('t-total').textContent='—'; $('t-dep').textContent='—'; $('t-bal').textContent='—'; $('t-bal-row').hidden=true;
+      $('m-total').textContent='—'; $('m-dep').textContent='—';
+      $('pack-wrap').hidden=true;
+      return;
+    }
     var p=price();
     var subj=val('subject'), med=val('medium');
     $('t-sum').textContent=p.w+' × '+p.h+' in · '+subj.toLowerCase()+(med==="Kimberly's choice"?'':' · '+med.replace(' on canvas','').toLowerCase());
@@ -465,6 +477,8 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--fg)}
     var h=steps[n-1].querySelector('h2'); h.setAttribute('tabindex','-1'); h.focus({preventScroll:true});
   }
   function validate(n){
+    if(n===1){var ok1=!!val('subject');$('err-1').hidden=ok1;return ok1;}
+    if(n===2){var ok2=!!val('size');$('err-2').hidden=ok2;return ok2;}
     if(n===3){var ok=state.photos.length>0;$('err-3').hidden=ok;return ok;}
     if(n===4){var req=['name','email','addr','city','state','zip'],ok=true;
       req.forEach(function(id){var el=$(id);var good=el.value.trim()!=='' && (id!=='email'||/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value.trim()));el.setAttribute('aria-invalid',good?'false':'true');if(!good)ok=false;});

@@ -9,6 +9,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=kimberly-k-20261103">
 <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png?v=kimberly-k-20261103">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=kimberly-k-20261103">
+<script src="brush.js" defer></script>
 </head><body>
 <title>Kimberly Marnell</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -293,7 +294,7 @@ footer{padding-block:40px 56px;color:var(--muted);font-size:13px;display:flex;fl
 
 <nav class="nav" aria-label="Main">
   <ul>
-    <li><a class="home" href="#top">Kimberly Marnell</a></li>
+    <li><a class="home" href="#top">Home</a></li>
     <li><a href="collect.html">Originals</a></li>
     <li><a href="prints.html">Prints</a></li>
     <li><a href="commission.html">Commissions</a></li>
@@ -359,7 +360,7 @@ footer{padding-block:40px 56px;color:var(--muted);font-size:13px;display:flex;fl
     <div class="perks">
       <div class="perk"><span class="k">Buy direct</span><span class="v">Free insured shipping in the US</span></div>
       <div class="perk"><span class="k">Every original</span><span class="v">Signed certificate of authenticity</span></div>
-      <div class="perk"><span class="k">Over $2,000</span><span class="v">Pay in 3 monthly payments</span></div>
+      <div class="perk"><span class="k">Over $2,000</span><span class="v"><a href="plan.html">Pay in 3 monthly payments</a> · no interest</span></div>
       <div class="perk"><span class="k">How</span><span class="v"><a href="mailto:kimberlysartandphotography@gmail.com?subject=Reserve%20a%20painting&amp;body=Hi%20Kimberly%2C%0A%0AI%20would%20like%20to%20reserve%3A%20%0A%0APayment%20plan%20%283%20monthly%20payments%29%20wanted%3A%20yes%20/%20no%0A%0AName%3A%0ACity%2C%20State%3A%0A">Email to reserve a piece</a></span></div>
     </div>
 
@@ -522,10 +523,10 @@ footer{padding-block:40px 56px;color:var(--muted);font-size:13px;display:flex;fl
         <h3>Prints of the coast after dark</h3>
         <p>Palms, piers and night light from Laguna, Newport and the Southern California shore, printed on canvas, metal, acrylic and fine-art paper.</p>
         <div class="photo-strip">
-          <img src="img/palms.jpg" alt="Palms" loading="lazy">
-          <img src="img/night-painting.jpg" alt="Night Painting" loading="lazy">
-          <img src="img/fourth.jpg" alt="Fourth" loading="lazy">
-          <img src="img/teal-palms.jpg" alt="Teal Palms" loading="lazy">
+          <img src="img/bw/palms.jpg" alt="Palms" loading="lazy">
+          <img src="img/bw/night-painting.jpg" alt="Night Painting" loading="lazy">
+          <img src="img/bw/fourth.jpg" alt="Fourth" loading="lazy">
+          <img src="img/bw/teal-palms.jpg" alt="Teal Palms" loading="lazy">
         </div>
         <a class="btn" href="https://fineartamerica.com/profiles/1-kimberly-marnell" target="_blank" rel="noopener">Shop prints on Fine Art America ↗</a>
       </div>
@@ -801,4 +802,27 @@ footer{padding-block:40px 56px;color:var(--muted);font-size:13px;display:flex;fl
 })();
 </script>
 
+
+<script>
+/* Home page artwork opens its painting page, the same as on the Originals page (Kimberly 11/13) */
+(function(){
+  var map={};
+  document.querySelectorAll('.work[id^="w-"]').forEach(function(w){
+    var slug=w.id.slice(2), f=w.querySelector('.frame');
+    if(!f) return;
+    map[(f.getAttribute('data-full')||'').split('/').pop()]=slug;
+    f.setAttribute('aria-label','View '+(w.querySelector('.t')||{}).textContent);
+    f.addEventListener('click',function(e){
+      if(f.closest('.row.dragging')) return;
+      e.preventDefault(); e.stopImmediatePropagation(); location.href=slug+'.html';
+    },true);
+  });
+  var hero=document.getElementById('slides');
+  if(hero) hero.addEventListener('click',function(e){
+    var on=hero.querySelector('img.on')||hero.querySelector('img');
+    var slug=map[(on.getAttribute('src')||'').split('/').pop()];
+    if(slug){ e.preventDefault(); e.stopImmediatePropagation(); location.href=slug+'.html'; }
+  },true);
+})();
+</script>
 </body></html>

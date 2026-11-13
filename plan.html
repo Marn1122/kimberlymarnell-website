@@ -1,0 +1,196 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pay in 3 | Kimberly Marnell</title>
+<meta name="description" content="Collect an original painting by Kimberly Marnell with 3 equal monthly payments. No interest and no fees.">
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="collect.css"><link rel="stylesheet" href="works.css"><script src="brush.js" defer></script>
+<link rel="icon" href="/favicon.ico?v=kimberly-k-20261103" sizes="any">
+<style>
+.st[hidden]{display:none!important}
+button.btn{background:transparent;color:var(--fg);font:inherit;cursor:pointer}button.btn.primary{background:var(--fg);color:var(--bg)}
+.plan{display:grid;grid-template-columns:1.25fr .75fr;gap:48px;align-items:start;padding:44px 0 80px}
+.steps-nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+.steps-nav span{font-size:13px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:6px 12px}
+.steps-nav span[aria-current]{color:var(--bg);background:var(--fg);border-color:var(--fg)}
+.steps-nav span.done{color:var(--fg);border-color:var(--accent)}
+.card2{border:1px solid var(--line);border-radius:18px;background:var(--surface);padding:30px;display:grid;gap:18px}
+.card2 h2{font-size:clamp(28px,3.2vw,40px);margin:0}
+.card2 .sub{color:var(--muted);margin:0}
+.pick{display:grid;grid-template-columns:120px 1fr;gap:20px;align-items:center}
+.pick img{background:#202025;padding:8px;max-height:150px;object-fit:contain}
+.sched{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.sched li{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.sched .n{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--accent);color:var(--accent);font-size:14px}
+.sched b{font-variant-numeric:tabular-nums;font-size:18px}
+.sched small{display:block;color:var(--muted);font-size:13px}
+.choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.choice{position:relative}
+.choice input{position:absolute;opacity:0}
+.choice label{display:grid;gap:4px;border:1px solid var(--line);border-radius:14px;padding:14px;cursor:pointer;height:100%}
+.choice label b{font-weight:500}.choice label span{color:var(--muted);font-size:13px}
+.choice input:checked+label{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+.choice input:focus-visible+label{outline:2px solid var(--accent);outline-offset:2px}
+.field{display:grid;gap:6px}.field label{font-size:14px}
+.field input,.field select{font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.field input[aria-invalid=true]{border-color:#ff6a4d}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.row3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:14px}
+.navb{display:flex;justify-content:space-between;gap:12px;margin-top:6px}
+.navb .btn{flex:0 0 auto}
+.err{color:#ff8a70;font-size:14px;margin:0}
+.terms{list-style:none;padding:0;margin:0;display:grid;gap:10px;color:var(--muted);font-size:15px}
+.terms li{padding-left:24px;position:relative}.terms li:before{content:"✓";position:absolute;left:0;color:var(--accent)}
+.check{display:flex;gap:12px;align-items:flex-start;font-size:15px}
+.check input{margin-top:4px;width:18px;height:18px;accent-color:var(--accent)}
+.ticket{position:sticky;top:20px;border:1px solid var(--line);border-radius:18px;padding:24px;display:grid;gap:12px;background:var(--surface)}
+.ticket .k{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.ticket .big{font-size:28px;white-space:nowrap;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.ticket dl{margin:0;display:grid;gap:8px}.ticket dl div{display:flex;justify-content:space-between;gap:12px;font-size:14px;color:var(--muted)}.ticket dd{margin:0;color:var(--fg);font-variant-numeric:tabular-nums}
+.amount{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+.amount code{font-family:inherit;font-size:30px;border:1px solid var(--accent);border-radius:12px;padding:8px 16px;user-select:all}
+.badge{display:inline-block;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+ol.next{margin:0;padding-left:20px;display:grid;gap:12px;color:var(--muted)}
+ol.next b{color:var(--fg);font-weight:500}
+@media(max-width:860px){.plan{grid-template-columns:1fr}.ticket{position:static;order:-1}.choices{grid-template-columns:1fr}.row2,.row3{grid-template-columns:1fr}.pick{grid-template-columns:90px 1fr}}
+</style></head><body><div class="wrap">
+<nav aria-label="Main"><a class="brand" href="index.html">Home</a><div class="links"><a href="collect.html">Originals</a><a href="prints.html">Prints</a><a href="commission.html">Commissions</a><a href="journal.html">Journal</a><a href="index.html#about">About</a><a href="index.html#contact">Contact</a></div></nav>
+<main>
+<p class="note crumb"><a href="collect.html">Originals</a> / Pay in 3</p>
+<div class="plan">
+<form id="f" novalidate>
+<div class="steps-nav" id="sn" aria-label="Steps"></div>
+
+<section class="card2 st" data-n="1" data-name="Your painting">
+  <span class="badge">Pay in 3 · no interest, no fees</span>
+  <h2>Choose your <em>painting.</em></h2>
+  <p class="sub">Split the price into 3 equal monthly payments. Your painting is reserved for you from the first payment.</p>
+  <div class="field"><label for="w">Painting</label><select id="w"></select></div>
+  <div class="pick" id="pick"></div>
+  <p class="note">Paintings over $2,000 can be paid in 3. Prefer to pay in full? Use the Buy button on the painting's page.</p>
+  <div class="navb"><span></span><button type="button" class="btn primary nx">Next: your schedule</button></div>
+</section>
+
+<section class="card2 st" data-n="2" data-name="Schedule" hidden>
+  <h2>Your payment <em>schedule.</em></h2>
+  <p class="sub">Three equal payments, one month apart. Choose the day of the month that suits you for payments 2 and 3.</p>
+  <div class="choices" role="radiogroup" aria-label="Payment day">
+    <div class="choice"><input type="radio" name="day" id="d-same" value="same" checked><label for="d-same"><b>Same day as today</b><span>Every month on this date</span></label></div>
+    <div class="choice"><input type="radio" name="day" id="d-1" value="1"><label for="d-1"><b>The 1st</b><span>Start of the month</span></label></div>
+    <div class="choice"><input type="radio" name="day" id="d-15" value="15"><label for="d-15"><b>The 15th</b><span>Middle of the month</span></label></div>
+  </div>
+  <ol class="sched" id="sched"></ol>
+  <p class="note">You can pay a later payment early at any time.</p>
+  <div class="navb"><button type="button" class="btn bk">Back</button><button type="button" class="btn primary nx">Next: your details</button></div>
+</section>
+
+<section class="card2 st" data-n="3" data-name="Your details" hidden>
+  <h2>Where should it <em>go?</em></h2>
+  <p class="sub">Kimberly uses these details to reserve the painting in your name and ship it when the plan is complete.</p>
+  <div class="row2"><div class="field"><label for="nm">Full name</label><input id="nm" autocomplete="name"></div><div class="field"><label for="em">Email</label><input id="em" type="email" autocomplete="email"></div></div>
+  <div class="field"><label for="ph">Phone <span class="note">(optional)</span></label><input id="ph" type="tel" autocomplete="tel"></div>
+  <div class="field"><label for="ad">Shipping address</label><input id="ad" autocomplete="street-address"></div>
+  <div class="row3"><div class="field"><label for="ct">City</label><input id="ct" autocomplete="address-level2"></div><div class="field"><label for="sa">State</label><input id="sa" autocomplete="address-level1"></div><div class="field"><label for="zp">ZIP</label><input id="zp" autocomplete="postal-code"></div></div>
+  <p class="err" id="e3" hidden>Add your name, a valid email and your full shipping address.</p>
+  <div class="navb"><button type="button" class="btn bk">Back</button><button type="button" class="btn primary nx">Next: review</button></div>
+</section>
+
+<section class="card2 st" data-n="4" data-name="Review" hidden>
+  <h2>How your plan <em>works.</em></h2>
+  <ul class="terms">
+    <li>No interest and no fees. You pay exactly the painting's price.</li>
+    <li>Your first payment reserves the painting. It is marked Reserved and taken off sale.</li>
+    <li>Payments 2 and 3 are due on the dates in your schedule. You'll get reminders, and you can pay early at any time.</li>
+    <li>After your final payment, Kimberly ships the painting with free insured US shipping and a signed certificate of authenticity.</li>
+    <li>Need to change a date or cancel? Email Kimberly before your next payment date and she'll work it out with you. Refunds follow the <a href="returns.html">returns policy</a>.</li>
+  </ul>
+  <label class="check"><input type="checkbox" id="ok"> <span>I agree to the payment plan above.</span></label>
+  <p class="err" id="e4" hidden>Please agree to the payment plan to continue.</p>
+  <div class="navb"><button type="button" class="btn bk">Back</button><button type="button" class="btn primary nx">Next: first payment</button></div>
+</section>
+
+<section class="card2 st" data-n="5" data-name="First payment" hidden>
+  <span class="badge" id="pid"></span>
+  <h2>Make your first <em>payment.</em></h2>
+  <p class="sub">Your first payment reserves <b id="pt"></b> for you.</p>
+  <div class="amount"><code id="amt"></code><button type="button" class="btn" id="cp-amt">Copy amount</button></div>
+  <ol class="next">
+    <li><b>Open the secure payment page</b> and enter the exact amount above, with your name and email. Card and bank transfer are accepted.<br><a class="btn primary" id="pay" href="#" target="_blank" rel="noopener" style="margin-top:10px">Open secure payment page</a></li>
+    <li><b>Send your plan to Kimberly</b> so she can reserve the painting in your name and confirm by email.<br><span style="display:flex;flex-wrap:wrap;gap:10px;margin-top:10px"><a class="btn" id="mail" href="#">Email my plan to Kimberly</a><button type="button" class="btn" id="cp-plan">Copy my plan</button></span></li>
+    <li><b>Add your payment reminders</b> for payments 2 and 3 to your calendar, with the amount and payment link inside.<br><a class="btn" id="ics" href="#" download="kimberly-marnell-payment-plan.ics" style="margin-top:10px">Add reminders to my calendar</a></li>
+  </ol>
+  <p class="note" id="cpn" aria-live="polite"></p>
+  <p class="note">Payments are processed securely by Bluevine on behalf of Haven Industries LLC. Kimberly confirms every payment by email.</p>
+  <div class="navb"><button type="button" class="btn bk">Back</button><a class="btn" id="back-art" href="collect.html">Back to the painting</a></div>
+</section>
+</form>
+
+<aside class="ticket" aria-live="polite" aria-label="Your plan">
+  <span class="k">Your plan</span>
+  <span id="tk-t"></span>
+  <span class="big" id="tk-m"></span>
+  <dl id="tk-l"></dl>
+  <p class="note">No interest. No fees. Free insured US shipping.</p>
+</aside>
+</div>
+</main>
+<footer><p>Kimberly Marnell · Artist in Irvine, California</p><p><a href="mailto:kimberlysartandphotography@gmail.com">Contact the artist</a><a href="collect.html">Originals</a><a href="returns.html">Returns &amp; Refunds</a></p></footer>
+</div>
+<script>
+(function(){
+var W={"communion-with-the-earth": {"t": "Communion with the Earth", "p": 10400, "m": "Oil on canvas · 36 × 48 in · 2026", "img": "img/communion-with-the-earth.jpg"}, "queen-of-the-night": {"t": "Queen of the Night", "p": 2600, "m": "Watercolor, acrylic marker and ink · 24 × 18 in · 2026", "img": "img/queen-of-the-night.jpg"}, "my-body": {"t": "My Body", "p": 2600, "m": "Charcoal on cotton paper · 24 × 18 in · 2022", "img": "img/my-body.jpg"}, "golden-hour": {"t": "Golden Hour", "p": 2600, "m": "Oil on canvas · 24 × 18 in · 2024", "img": "img/golden-hour.jpg"}, "take-me-back": {"t": "Take Me Back", "p": 2600, "m": "Watercolor · 24 × 18 in · 2023", "img": "img/take-me-back.jpg"}, "going-home": {"t": "Going Home", "p": 2600, "m": "Acrylic on paper · 24 × 18 in · 2022", "img": "img/going-home.jpg"}, "the-comfort-of-frosting": {"t": "The Comfort of Frosting", "p": 2600, "m": "Oil on canvas · 18 × 24 in · 2023", "img": "img/the-comfort-of-frosting.jpg"}, "appealing-tides-of-excess": {"t": "Appealing Tides of Excess", "p": 2600, "m": "Watercolor on paper · 18 × 24 in · 2024", "img": "img/appealing-tides-of-excess.jpg"}, "new-beginnings": {"t": "New Beginnings", "p": 2600, "m": "Gouache on paper · 18 × 24 in · 2025", "img": "img/new-beginnings.jpg"}}, PAY='https://pay.bluevine.com/p/26fc2790c2254b94bf283d54a285a9c7', EMAIL='kimberlysartandphotography@gmail.com';
+var $=function(id){return document.getElementById(id)};
+var money=function(n){return '$'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}).replace('.00','')};
+var steps=[].slice.call(document.querySelectorAll('.st')), cur=1, pid='';
+var sel=$('w');
+Object.keys(W).forEach(function(k){var o=document.createElement('option');o.value=k;o.textContent=W[k].t+' · $'+W[k].p.toLocaleString('en-US');sel.appendChild(o);});
+var q=new URLSearchParams(location.search).get('w'); if(q&&W[q]) sel.value=q;
+function art(){return W[sel.value]}
+function parts(p){var c=Math.round(p*100),a=Math.floor(c/3);return [c-2*a,a,a].map(function(x){return x/100})}
+function addMonths(d,m,day){var y=d.getFullYear(),mo=d.getMonth()+m;var target=(day==='same')?d.getDate():+day;var last=new Date(y,mo+1,0).getDate();return new Date(y,mo,Math.min(target,last));}
+function dates(){var t=new Date();t.setHours(12,0,0,0);var day=(document.querySelector('input[name=day]:checked')||{}).value||'same';return [t,addMonths(t,1,day),addMonths(t,2,day)];}
+function fmt(d){return d.toLocaleDateString('en-US',{weekday:'short',month:'long',day:'numeric',year:'numeric'})}
+function render(){
+  var a=art(), p=parts(a.p), d=dates();
+  $('pick').innerHTML='';var im=document.createElement('img');im.src=a.img;im.alt=a.t;var tx=document.createElement('div');
+  tx.innerHTML='<h3></h3><p class="note"></p><p></p>';tx.querySelector('h3').textContent=a.t;tx.querySelector('.note').textContent=a.m;tx.querySelectorAll('p')[1].textContent='$'+a.p.toLocaleString('en-US')+' · 3 payments of about '+money(p[1]);
+  $('pick').append(im,tx);
+  $('sched').innerHTML='';
+  p.forEach(function(x,i){var li=document.createElement('li');li.innerHTML='<span class="n">'+(i+1)+'</span><span><span class="w"></span><small></small></span><b></b>';
+    li.querySelector('.w').textContent=i===0?'Today':(i===1?'Second payment':'Final payment');
+    li.querySelector('small').textContent=i===0?'Reserves your painting':fmt(d[i])+(i===2?' · then your painting ships':'');
+    li.querySelector('b').textContent=money(x);$('sched').appendChild(li);});
+  $('tk-t').textContent=a.t;$('tk-m').textContent=money(p[1])+' / month';
+  $('tk-l').innerHTML='';[['Painting','$'+a.p.toLocaleString('en-US')],['Today',money(p[0])],['In 1 month',money(p[1])],['In 2 months',money(p[2])],['Interest and fees','$0']].forEach(function(r){var dv=document.createElement('div');var dt=document.createElement('dt');dt.textContent=r[0];var dd=document.createElement('dd');dd.textContent=r[1];dv.append(dt,dd);$('tk-l').appendChild(dv);});
+  $('back-art').href=sel.value+'.html';
+}
+function nav(){$('sn').innerHTML='';steps.forEach(function(s,i){var e=document.createElement('span');e.textContent=(i+1)+'. '+s.getAttribute('data-name');if(i+1===cur)e.setAttribute('aria-current','step');else if(i+1<cur)e.className='done';$('sn').appendChild(e);});}
+function valid(n){
+  if(n===3){var ok=true;['nm','em','ad','ct','sa','zp'].forEach(function(id){var v=$(id).value.trim();var g=v!==''&&(id!=='em'||/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v));$(id).setAttribute('aria-invalid',g?'false':'true');if(!g)ok=false;});$('e3').hidden=ok;return ok;}
+  if(n===4){var c=$('ok').checked;$('e4').hidden=c;return c;}
+  return true;}
+function go(n){cur=n;steps.forEach(function(s){s.hidden=+s.getAttribute('data-n')!==n});nav();if(n===5)finish();var h=steps[n-1].querySelector('h2');h.setAttribute('tabindex','-1');h.focus({preventScroll:true});var top=document.querySelector('.plan').getBoundingClientRect().top+scrollY-10;if(scrollY>top)scrollTo(0,top);}
+function planText(){var a=art(),p=parts(a.p),d=dates();return ['PAY IN 3 PLAN '+pid,'','Painting: '+a.t+' ('+a.m+')','Price: $'+a.p.toLocaleString('en-US')+' · no interest, no fees','',
+  '1. Today ('+fmt(d[0])+'): '+money(p[0])+' · reserves the painting','2. '+fmt(d[1])+': '+money(p[1]),'3. '+fmt(d[2])+': '+money(p[2])+' · then the painting ships','',
+  'Name: '+$('nm').value.trim(),'Email: '+$('em').value.trim(),'Phone: '+($('ph').value.trim()||'-'),'Ship to: '+$('ad').value.trim()+', '+$('ct').value.trim()+', '+$('sa').value.trim()+' '+$('zp').value.trim(),'',
+  'I agreed to the payment plan on '+fmt(d[0])+'.'].join('\n');}
+function ics(){var a=art(),p=parts(a.p),d=dates();var stamp=new Date().toISOString().replace(/[-:]/g,'').split('.')[0]+'Z';
+  var ev=function(i){var dt=d[i];var ds=dt.getFullYear()+String(dt.getMonth()+1).padStart(2,'0')+String(dt.getDate()).padStart(2,'0');
+    return ['BEGIN:VEVENT','UID:'+pid+'-'+(i+1)+'@kimberlymarnell.com','DTSTAMP:'+stamp,'DTSTART;VALUE=DATE:'+ds,'SUMMARY:Payment '+(i+1)+' of 3 · '+a.t+' · '+money(p[i]),
+      'DESCRIPTION:Pay '+money(p[i])+' for '+a.t+' (plan '+pid+') at '+PAY+' · Questions: '+EMAIL,'URL:'+PAY,
+      'BEGIN:VALARM','TRIGGER:-P3D','ACTION:DISPLAY','DESCRIPTION:Payment due in 3 days','END:VALARM','END:VEVENT'].join('\r\n');};
+  return ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Kimberly Marnell//Pay in 3//EN',ev(1),ev(2),'END:VCALENDAR'].join('\r\n');}
+function finish(){var a=art(),p=parts(a.p),t=new Date();
+  if(!pid){pid='KM-P-'+t.getFullYear()+String(t.getMonth()+1).padStart(2,'0')+String(t.getDate()).padStart(2,'0')+'-'+Math.random().toString(36).slice(2,6).toUpperCase();}
+  $('pid').textContent='Plan '+pid;$('pt').textContent=a.t;$('amt').textContent=money(p[0]);$('pay').href=PAY;
+  $('mail').href='mailto:'+EMAIL+'?subject='+encodeURIComponent('Pay in 3: '+a.t+' ('+pid+')')+'&body='+encodeURIComponent(planText());
+  try{$('ics').href=URL.createObjectURL(new Blob([ics()],{type:'text/calendar'}));}catch(e){}
+}
+function copy(text,msg){var done=function(){$('cpn').textContent=msg};if(navigator.clipboard)navigator.clipboard.writeText(text).then(done,function(){$('cpn').textContent='Select the text and copy it.'});else $('cpn').textContent='Select the text and copy it.';}
+$('cp-amt').onclick=function(){copy(money(parts(art().p)[0]).replace('$',''),'Amount copied.')};
+$('cp-plan').onclick=function(){copy(planText(),'Plan copied. Paste it into an email to '+EMAIL+'.')};
+document.querySelectorAll('.nx').forEach(function(b){b.onclick=function(){if(valid(cur))go(cur+1)}});
+document.querySelectorAll('.bk').forEach(function(b){b.onclick=function(){go(cur-1)}});
+sel.onchange=function(){pid='';render()};
+document.querySelectorAll('input[name=day]').forEach(function(r){r.onchange=render});
+render();nav();
+})();
+</script></body></html>
