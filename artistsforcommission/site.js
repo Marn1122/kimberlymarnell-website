@@ -1,0 +1,52 @@
+/* Artists for Commission — shared data and behaviour for every page. */
+
+/* Platform fee taken from the artist's sale. One number, change it here only. */
+window.AFC_FEE = 0.10;
+
+/* Approved artists on the marketplace. Only real, approved artists go in this list. */
+window.AFC_ARTISTS = [
+  {
+    slug: 'kimberly-marnell',
+    name: 'Kimberly Marnell',
+    founding: true,
+    location: 'Irvine, California',
+    page: 'artist-kimberly-marnell.html',
+    orderUrl: 'commission.html',
+    styles: ['Pets', 'People & families', 'Homes & places'],
+    mediums: ['Oil', 'Acrylic'],
+    from: 200,
+    blurb: 'Expressive portraits in oil and acrylic, often wrapped in flowers, sky and warm light.',
+    images: ['img/golden-hour.jpg', 'img/queen-of-the-night.jpg', 'img/take-me-back.jpg']
+  }
+];
+
+window.afcMoney = function (n) {
+  return '$' + Math.round(n).toLocaleString('en-US');
+};
+
+(function () {
+  /* mobile menu */
+  var nav = document.querySelector('.gnav');
+  var btn = nav && nav.querySelector('.menu');
+  if (btn) btn.addEventListener('click', function () {
+    var open = nav.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    btn.textContent = open ? 'Close' : 'Menu';
+  });
+
+  /* gentle scroll reveal */
+  var els = document.querySelectorAll('.rv');
+  if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    els.forEach(function (e) { e.classList.add('in'); });
+  } else {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+    }, { rootMargin: '0px 0px -8% 0px' });
+    els.forEach(function (e) { io.observe(e); });
+  }
+
+  /* fee text anywhere on the page */
+  var pct = Math.round(window.AFC_FEE * 100);
+  document.querySelectorAll('[data-fee]').forEach(function (e) { e.textContent = pct + '%'; });
+  document.querySelectorAll('[data-keep]').forEach(function (e) { e.textContent = (100 - pct) + '%'; });
+})();

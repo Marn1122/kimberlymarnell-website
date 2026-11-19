@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apply to join · Artists for Commission</title>
+<meta name="description" content="Apply to sell commissions on Artists for Commission. About five minutes. No fees to join.">
+<link rel="canonical" href="https://www.artistsforcommission.com/join">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Apply to join · Artists for Commission">
+<meta property="og:description" content="Apply to sell commissions on Artists for Commission. About five minutes. No fees to join.">
+<meta property="og:url" content="https://www.artistsforcommission.com/join">
+<meta property="og:image" content="https://www.artistsforcommission.com/img/golden-hour.jpg">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap">
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<div class="preview">Preview for review — not live. Sign-ups and payments are switched off in this preview.</div>
+<header class="gnav" id="top"><div class="gin">
+<a class="brand" href="index.html" style="opacity:1">Artists <span>for</span> Commission</a>
+<nav class="links" aria-label="Main"><a href="index.html">Home</a><a href="artists.html">Find an artist</a><a href="index.html#how">How it works</a><a href="for-artists.html">For artists</a><a class="pill" href="join.html">Join as an artist</a></nav>
+<button class="menu" type="button" aria-expanded="false" aria-label="Open menu">Menu</button>
+</div></header>
+
+<style>
+.join{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:48px;align-items:start;padding-block:clamp(40px,6vw,70px) 100px}
+.prog{display:flex;gap:6px;margin:26px 0 34px}
+.prog span{flex:1;height:4px;border-radius:4px;background:var(--line);transition:background .4s}
+.prog span.on{background:var(--accent)}
+.stepname{font-size:14px;color:var(--muted);font-weight:500}
+.panel{display:grid;gap:26px}
+.panel h2{font-size:clamp(30px,4vw,44px);letter-spacing:-.035em;line-height:1.08}
+.field{display:grid;gap:8px}
+.field label,.lbl{font-weight:600;font-size:16px}
+.field .hint,.hint{font-size:14px;color:var(--muted);font-weight:400}
+.in,textarea.in,select.in{width:100%;font:inherit;font-size:17px;color:var(--fg);background:var(--tile);border:1px solid transparent;border-radius:14px;padding:14px 16px;transition:border-color .2s,background .2s}
+.in:focus{outline:none;border-color:var(--accent);background:var(--bg)}
+textarea.in{min-height:110px;resize:vertical}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.pick{display:flex;flex-wrap:wrap;gap:10px}
+.pick button{border:1.5px solid var(--line);background:var(--bg);color:var(--fg);border-radius:999px;padding:10px 18px;font:inherit;font-size:16px;cursor:pointer;transition:all .2s}
+.pick button[aria-pressed="true"]{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 10%,var(--bg));color:var(--accent);font-weight:600}
+.pick button[aria-pressed="true"]::before{content:"✓ "}
+.drop{border:2px dashed var(--line);border-radius:20px;padding:34px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;color:var(--muted)}
+.drop.over,.drop:hover{border-color:var(--accent);background:var(--tile)}
+.drop b{color:var(--fg);display:block;font-size:18px;margin-bottom:4px}
+.thumbs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.thumbs div{position:relative;aspect-ratio:1;border-radius:14px;overflow:hidden;background:var(--tile)}
+.thumbs img{width:100%;height:100%;object-fit:cover}
+.thumbs button{position:absolute;top:6px;right:6px;width:28px;height:28px;border-radius:50%;border:0;background:rgba(0,0,0,.6);color:#fff;font-size:16px;cursor:pointer;line-height:1}
+.seg{display:inline-flex;background:var(--tile);border-radius:999px;padding:4px}
+.seg button{border:0;background:transparent;color:var(--fg);font:inherit;font-size:15px;padding:9px 18px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--bg);box-shadow:0 1px 4px rgba(0,0,0,.15);font-weight:600}
+.money{position:relative}.money span{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--muted)}.money .in{padding-left:32px}
+.example{background:var(--tile);border-radius:16px;padding:16px 18px;font-size:15px;color:var(--muted)}
+.example b{color:var(--fg)}
+.check{display:flex;gap:12px;align-items:flex-start;font-size:16px;cursor:pointer}
+.check input{width:22px;height:22px;margin-top:1px;accent-color:var(--accent);flex:none}
+.nav2{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:6px}
+.err{color:#d0342c;font-size:15px;font-weight:500}
+.count{font-size:13px;color:var(--muted);text-align:right}
+.side{position:sticky;top:76px}
+.side .lbl{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;display:block}
+.side .acard .cover img:only-child{grid-row:1/3;grid-column:1/3}
+.empty-img{display:grid;place-items:center;color:var(--muted);font-size:14px;grid-row:1/3;grid-column:1/3}
+.saved{font-size:13px;color:var(--muted);margin-top:14px}
+.done{text-align:center;padding:40px 0}
+.done .tick{width:72px;height:72px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;font-size:36px;margin:0 auto 24px}
+.after{display:grid;gap:12px;text-align:left;max-width:520px;margin:34px auto 0}
+.after div{background:var(--tile);border-radius:16px;padding:18px 20px}
+@media (max-width:900px){.join{grid-template-columns:1fr}.side{position:static;order:-1}.side .acard{display:none}.side .lbl{display:none}}
+@media (max-width:560px){.two{grid-template-columns:1fr}.thumbs{grid-template-columns:repeat(3,minmax(0,1fr))}}
+</style>
+<main class="wrap">
+<div class="join">
+<form id="f" novalidate>
+  <h1 class="headline" style="font-size:clamp(34px,5vw,56px)">Apply to <span class="serif">join.</span></h1>
+  <p class="lead" style="margin-top:10px">About five minutes. No fees to join. Your progress is saved on this device.</p>
+  <div class="prog" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+  <p class="stepname" id="stepname" aria-live="polite"></p>
+
+  <!-- 1 -->
+  <section class="panel" data-step="1" data-name="About you" style="padding:0">
+    <h2>Hi! Tell us <span class="serif">about you.</span></h2>
+    <div class="field"><label for="name">Your name or studio name</label><input class="in" id="name" autocomplete="name" placeholder="e.g. Maya Lopez Studio"></div>
+    <div class="two">
+      <div class="field"><label for="email">Email</label><input class="in" id="email" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com"></div>
+      <div class="field"><label for="city">City and state</label><input class="in" id="city" autocomplete="address-level2" placeholder="e.g. Austin, TX"></div>
+    </div>
+    <div class="field"><label for="link">Instagram or website <span class="hint">(optional)</span></label><input class="in" id="link" placeholder="@yourname or yoursite.com"></div>
+    <div class="field"><label for="bio">Describe your style in a sentence or two</label><textarea class="in" id="bio" maxlength="220" placeholder="e.g. Soft, painterly pet portraits in oil, with lots of warm light."></textarea><p class="count"><span id="bio-n">0</span>/220</p></div>
+    <p class="err" hidden></p>
+    <div class="nav2"><span></span><button class="btn next" type="button">Continue</button></div>
+  </section>
+
+  <!-- 2 -->
+  <section class="panel" data-step="2" data-name="Your work" style="padding:0" hidden>
+    <h2>Show us <span class="serif">your work.</span></h2>
+    <div class="field"><span class="lbl">What do you paint? <span class="hint">Choose all that apply</span></span>
+      <div class="pick" id="styles"><button type="button" aria-pressed="false">Pets</button><button type="button" aria-pressed="false">People &amp; families</button><button type="button" aria-pressed="false">Homes &amp; places</button></div></div>
+    <div class="field"><span class="lbl">Your mediums</span>
+      <div class="pick" id="mediums"><button type="button" aria-pressed="false">Oil</button><button type="button" aria-pressed="false">Acrylic</button><button type="button" aria-pressed="false">Watercolor</button><button type="button" aria-pressed="false">Gouache</button><button type="button" aria-pressed="false">Pastel</button><button type="button" aria-pressed="false">Charcoal &amp; pencil</button><button type="button" aria-pressed="false">Digital</button></div></div>
+    <div class="field"><span class="lbl">Add 3 to 8 of your best pieces</span>
+      <label class="drop" id="drop"><input type="file" id="files" accept="image/jpeg,image/png,image/webp" multiple hidden><b>Drop images here or tap to choose</b>JPG or PNG. Commissions you've painted are best.</label>
+      <div class="thumbs" id="thumbs"></div></div>
+    <p class="err" hidden></p>
+    <div class="nav2"><button class="btn line back" type="button">Back</button><button class="btn next" type="button">Continue</button></div>
+  </section>
+
+  <!-- 3 -->
+  <section class="panel" data-step="3" data-name="Your prices" style="padding:0" hidden>
+    <h2>Set your <span class="serif">prices.</span></h2>
+    <p class="muted" style="margin-top:-12px">You can change these any time. Clients see your exact price as they order.</p>
+    <div class="field"><span class="lbl">How do you price?</span>
+      <div class="seg" id="mode"><button type="button" aria-pressed="true" data-m="sqin">Per square inch</button><button type="button" aria-pressed="false" data-m="flat">Flat price by size</button></div></div>
+    <div id="m-sqin" class="two">
+      <div class="field"><label for="rate">Your rate <span class="hint">per square inch</span></label><div class="money"><span>$</span><input class="in" id="rate" type="number" inputmode="decimal" min="0.5" step="0.25" value="2.50"></div></div>
+      <div class="field"><label for="extra">Each extra person or pet</label><select class="in" id="extra"><option value="0">No extra charge</option><option value="0.15">+15%</option><option value="0.25" selected>+25%</option><option value="0.5">+50%</option></select></div>
+    </div>
+    <div id="m-flat" class="two" hidden>
+      <div class="field"><label for="p-small">Small <span class="hint">8 × 10 in</span></label><div class="money"><span>$</span><input class="in" id="p-small" type="number" inputmode="numeric" min="20" placeholder="200"></div></div>
+      <div class="field"><label for="p-med">Medium <span class="hint">16 × 20 in</span></label><div class="money"><span>$</span><input class="in" id="p-med" type="number" inputmode="numeric" min="20" placeholder="800"></div></div>
+      <div class="field"><label for="p-large">Large <span class="hint">24 × 36 in</span></label><div class="money"><span>$</span><input class="in" id="p-large" type="number" inputmode="numeric" min="20" placeholder="2000"></div></div>
+    </div>
+    <div class="example" id="example"></div>
+    <div class="field"><label for="turn">Usual time to finish a medium piece</label><select class="in" id="turn"><option>1–2 weeks</option><option selected>2–4 weeks</option><option>4–6 weeks</option><option>6–8 weeks</option><option>8+ weeks</option></select></div>
+    <label class="check"><input type="checkbox" id="rush" checked><span>I can take rush orders for an extra fee</span></label>
+    <p class="err" hidden></p>
+    <div class="nav2"><button class="btn line back" type="button">Back</button><button class="btn next" type="button">Continue</button></div>
+  </section>
+
+  <!-- 4 -->
+  <section class="panel" data-step="4" data-name="Agree and send" style="padding:0" hidden>
+    <h2>Almost <span class="serif">there.</span></h2>
+    <div class="example" style="font-size:16px">You keep <b data-keep>90%</b> of every payment. Our <b data-fee>10%</b> fee includes card processing. On an $800 commission you receive <b id="ex-keep">$720</b>.</div>
+    <div class="example" style="font-size:16px">After you're approved, you'll connect your bank through our secure payment partner. We never see or store your bank details.</div>
+    <label class="check"><input type="checkbox" id="a1"><span>The work I submitted is my own, and I painted it.</span></label>
+    <label class="check"><input type="checkbox" id="a2"><span>I agree to the <span data-fee>10%</span> platform fee on commissions I'm paid for through Artists for Commission.</span></label>
+    <label class="check"><input type="checkbox" id="a3"><span>I agree to the artist terms, including sketch approval before painting and insured shipping.</span></label>
+    <p class="err" hidden></p>
+    <div class="nav2"><button class="btn line back" type="button">Back</button><button class="btn" id="send" type="button">Send application</button></div>
+  </section>
+
+  <section class="done" id="done" hidden style="padding:0">
+    <div class="tick" aria-hidden="true">✓</div>
+    <h2 class="headline" style="font-size:clamp(32px,4.5vw,50px)">Thank you, <span class="serif" id="done-name">artist.</span></h2>
+    <p class="lead" style="margin:14px auto 0;max-width:36ch">Your application is in. We'll review your work and email you.</p>
+    <div class="after">
+      <div><b>1. We review your work.</b><br><span class="muted">A working artist looks at every application.</span></div>
+      <div><b>2. You connect payouts.</b><br><span class="muted">If approved, we send a secure link to connect your bank.</span></div>
+      <div><b>3. Your page goes live.</b><br><span class="muted">Share your link and start taking commissions.</span></div>
+    </div>
+    <p class="muted" style="margin-top:30px;font-size:14px">Preview note: nothing was sent. In the live site this step sends the application to Kimberly.</p>
+  </section>
+</form>
+
+<aside class="side" aria-label="Preview of your artist card">
+  <span class="lbl">Your card, live</span>
+  <div class="acard">
+    <div class="cover" id="pv-cover"><div class="empty-img">Your images appear here</div></div>
+    <div class="body">
+      <span class="badge">★ Founding artist</span>
+      <h3 id="pv-name">Your name</h3>
+      <p class="meta" id="pv-meta">Your city · Your mediums</p>
+      <p class="meta" id="pv-bio">A sentence about your style.</p>
+      <p class="meta" id="pv-from"></p>
+      <div class="tags" id="pv-tags"></div>
+    </div>
+  </div>
+  <p class="saved" id="saved"></p>
+</aside>
+</div>
+</main>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  var $=function(id){return document.getElementById(id)};
+  var panels=[].slice.call(document.querySelectorAll('.panel')),step=1,images=[],KEY='afc-join-draft';
+  var fields=['name','email','city','link','bio','rate','extra','p-small','p-med','p-large','turn'];
+  function picked(id){return [].slice.call($(id).querySelectorAll('[aria-pressed="true"]')).map(function(b){return b.textContent})}
+  function mode(){return $('mode').querySelector('[aria-pressed="true"]').dataset.m}
+  function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML}
+  function fromPrice(){
+    if(mode()==='sqin'){var r=parseFloat($('rate').value);return r>0?r*80:0}
+    var s=parseFloat($('p-small').value);return s>0?s:0}
+  function show(n){
+    step=n; panels.forEach(function(p){p.hidden=+p.dataset.step!==n}); $('done').hidden=true;
+    document.querySelectorAll('.prog span').forEach(function(s,i){s.classList.toggle('on',i<n)});
+    $('stepname').textContent='Step '+n+' of 4 · '+panels[n-1].dataset.name;
+    var h=panels[n-1].querySelector('h2'); if(h){h.setAttribute('tabindex','-1');h.focus({preventScroll:true})}
+    scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+  }
+  function err(n,msg){var e=panels[n-1].querySelector('.err');e.textContent=msg||'';e.hidden=!msg;return !msg}
+  function check(n){
+    if(n===1){
+      if(!$('name').value.trim()) return err(1,'Please add your name or studio name.');
+      if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test($('email').value.trim())) return err(1,'Please add an email address we can reach you at.');
+      if(!$('city').value.trim()) return err(1,'Please add your city and state.');
+      if($('bio').value.trim().length<10) return err(1,'Add a short sentence about your style.');
+    }
+    if(n===2){
+      if(!picked('styles').length) return err(2,'Choose at least one thing you paint.');
+      if(!picked('mediums').length) return err(2,'Choose at least one medium.');
+      if(images.length<3) return err(2,'Add at least 3 images of your work ('+images.length+' added).');
+    }
+    if(n===3){
+      if(mode()==='sqin'&&!(parseFloat($('rate').value)>0)) return err(3,'Add your rate per square inch.');
+      if(mode()==='flat'&&!(parseFloat($('p-small').value)>0&&parseFloat($('p-med').value)>0&&parseFloat($('p-large').value)>0)) return err(3,'Add a price for each size.');
+    }
+    if(n===4){ if(!($('a1').checked&&$('a2').checked&&$('a3').checked)) return err(4,'Please check all three boxes to send.'); }
+    return err(n,'');
+  }
+  function preview(){
+    $('pv-name').textContent=$('name').value.trim()||'Your name';
+    var med=picked('mediums');
+    $('pv-meta').textContent=($('city').value.trim()||'Your city')+' · '+(med.length?med.join(', '):'Your mediums');
+    $('pv-bio').textContent=$('bio').value.trim()||'A sentence about your style.';
+    $('bio-n').textContent=$('bio').value.length;
+    var fp=fromPrice(); $('pv-from').innerHTML=fp?'From <b style="color:var(--fg)">'+afcMoney(fp)+'</b>':'';
+    $('pv-tags').innerHTML=picked('styles').map(function(s){return '<span class="tag">'+esc(s)+'</span>'}).join('');
+    $('pv-cover').innerHTML=images.length?images.slice(0,3).map(function(u){return '<img src="'+u+'" alt="">'}).join(''):'<div class="empty-img">Your images appear here</div>';
+    // example price
+    var ex='';
+    if(mode()==='sqin'){var r=parseFloat($('rate').value)||0,x=parseFloat($('extra').value);
+      ex=r?'A 16 × 20 in portrait would be <b>'+afcMoney(r*320)+'</b>'+(x?', or <b>'+afcMoney(r*320*(1+x))+'</b> with two subjects.':'.'):'Add a rate to see an example.';}
+    else{var m=parseFloat($('p-med').value);ex=m?'A 16 × 20 in piece would be <b>'+afcMoney(m)+'</b>.':'Add your prices to see an example.';}
+    if(fp||parseFloat($('p-med').value)){var base=mode()==='sqin'?(parseFloat($('rate').value)||0)*320:parseFloat($('p-med').value);ex+=' You would receive <b>'+afcMoney(base*(1-AFC_FEE))+'</b>.'}
+    $('example').innerHTML=ex;
+    $('ex-keep').textContent=afcMoney(800*(1-AFC_FEE));
+  }
+  function save(){
+    var d={step:step,mode:mode(),styles:picked('styles'),mediums:picked('mediums'),rush:$('rush').checked};
+    fields.forEach(function(k){d[k]=$(k).value});
+    try{localStorage.setItem(KEY,JSON.stringify(d));$('saved').textContent='Draft saved on this device. Images are not saved.'}catch(e){}
+  }
+  function load(){
+    try{var d=JSON.parse(localStorage.getItem(KEY)||'null');if(!d)return;
+      fields.forEach(function(k){if(d[k]!=null)$(k).value=d[k]});
+      ['styles','mediums'].forEach(function(g){$(g).querySelectorAll('button').forEach(function(b){b.setAttribute('aria-pressed',(d[g]||[]).indexOf(b.textContent)>=0?'true':'false')})});
+      setMode(d.mode||'sqin'); $('rush').checked=d.rush!==false;
+      $('saved').textContent='Welcome back. We restored your draft.';
+    }catch(e){}
+  }
+  function setMode(m){$('mode').querySelectorAll('button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.m===m?'true':'false')});$('m-sqin').hidden=m!=='sqin';$('m-flat').hidden=m!=='flat';}
+  // images
+  function addFiles(list){
+    [].slice.call(list).forEach(function(f){
+      if(!/^image\//.test(f.type)||images.length>=8) return;
+      images.push(URL.createObjectURL(f));
+    });
+    drawThumbs(); preview(); if(step===2&&images.length>=3) err(2,'');
+  }
+  function drawThumbs(){
+    $('thumbs').innerHTML=images.map(function(u,i){return '<div><img src="'+u+'" alt="Your image '+(i+1)+'"><button type="button" data-i="'+i+'" aria-label="Remove image '+(i+1)+'">×</button></div>'}).join('');
+  }
+  $('thumbs').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;URL.revokeObjectURL(images[b.dataset.i]);images.splice(+b.dataset.i,1);drawThumbs();preview()});
+  $('files').addEventListener('change',function(){addFiles(this.files);this.value=''});
+  var drop=$('drop');
+  ['dragenter','dragover'].forEach(function(t){drop.addEventListener(t,function(e){e.preventDefault();drop.classList.add('over')})});
+  ['dragleave','drop'].forEach(function(t){drop.addEventListener(t,function(e){e.preventDefault();drop.classList.remove('over')})});
+  drop.addEventListener('drop',function(e){addFiles(e.dataTransfer.files)});
+  // pickers
+  ['styles','mediums'].forEach(function(g){$(g).addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')==='true'?'false':'true');preview();save()})});
+  $('mode').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;setMode(b.dataset.m);preview();save()});
+  document.addEventListener('input',function(){preview();save()});
+  document.addEventListener('change',function(){preview();save()});
+  document.querySelectorAll('.next').forEach(function(b){b.addEventListener('click',function(){if(check(step)){show(step+1);save()}})});
+  document.querySelectorAll('.back').forEach(function(b){b.addEventListener('click',function(){show(step-1);save()})});
+  $('send').addEventListener('click',function(){
+    if(!check(4)) return;
+    /* LIVE SITE: send the application here (form service + image upload). The preview sends nothing. */
+    panels.forEach(function(p){p.hidden=true}); $('done').hidden=false;
+    $('done-name').textContent=($('name').value.trim().split(' ')[0]||'artist')+'.';
+    document.querySelectorAll('.prog span').forEach(function(s){s.classList.add('on')});
+    $('stepname').textContent='Application sent';
+    try{localStorage.removeItem(KEY)}catch(e){}
+    scrollTo({top:0});
+  });
+  load(); preview(); show(1);
+});
+</script>
+<footer class="foot"><div class="wrap">
+<div class="cols">
+<div><h4>Commission art</h4><a href="artists.html">Find an artist</a><a href="index.html#styles">Pet portraits</a><a href="index.html#styles">Family &amp; people portraits</a><a href="index.html#styles">Home paintings</a></div>
+<div><h4>For artists</h4><a href="for-artists.html">Why join</a><a href="for-artists.html#fees">Fees</a><a href="join.html">Apply to join</a><a href="for-artists.html#faq">Artist questions</a></div>
+<div><h4>Help</h4><a href="index.html#how">How it works</a><a href="commission-a-painting-from-photos.html">What photos to send</a><a href="https://www.kimberlymarnell.com/returns.html">Returns &amp; refunds</a><a href="mailto:kimberlysartandphotography@gmail.com">Contact us</a></div>
+<div><h4>Our fine art partner</h4><a href="https://www.kimberlymarnell.com/">Kimberly Marnell Fine Art ↗</a><a href="https://www.kimberlymarnell.com/collect.html">Original paintings ↗</a><a href="https://www.kimberlymarnell.com/designers.html">Interior designer trade ↗</a></div>
+</div>
+<div class="partner"><span>© 2026 Artists for Commission · A Haven Art House studio · Irvine, California</span><span>Kimberly Marnell Fine Art is our partner.</span></div>
+</div></footer>
+<script src="site.js"></script>
+</body>
+</html>
