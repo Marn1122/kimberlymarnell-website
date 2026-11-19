@@ -20,7 +20,6 @@
 <link rel="stylesheet" href="site.css">
 </head>
 <body>
-<div class="preview">Preview for review — not live. Sign-ups and payments are switched off in this preview.</div>
 <header class="gnav" id="top"><div class="gin">
 <a class="brand" href="index.html" style="opacity:1">Artists <span>for</span> Commission</a>
 <nav class="links" aria-label="Main"><a href="index.html">Home</a><a href="artists.html" aria-current="page">Find an artist</a><a href="index.html#how">How it works</a><a href="for-artists.html">For artists</a><a class="pill" href="join.html">Join as an artist</a></nav>
@@ -139,7 +138,7 @@ document.addEventListener('DOMContentLoaded',function(){
     var msg='';
     if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test($('email').value.trim())) msg=ERR.email;
     else if(!$('agree').checked) msg='Please tick the box to confirm how the sketch and balance work.';
-    else if(a.example||!window.AFC_PAY_URL) msg='Preview only: payment is switched off. On the live site this button opens Stripe checkout.';
+    else if(a.example||!window.AFC_PAY_URL) msg='Online checkout for this artist opens soon. Please email kimberlysartandphotography@gmail.com to place your order.';
     if(msg){e.preventDefault();$('alert').textContent=msg;$('alert').hidden=false;$('alert').scrollIntoView({block:'center'})}
     else $('pay').textContent='Opening secure checkout…';
   });

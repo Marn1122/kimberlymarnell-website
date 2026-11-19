@@ -34,18 +34,9 @@
     } */
   ];
 
-  /* Example artist used ONLY in the review preview to show checkout. Never listed. Delete before going live. */
-  var EXAMPLE = {
-    slug: 'example-artist', name: 'Example Artist', example: true, location: 'Anywhere, USA',
-    payWith: 'stripe', styles: ['Pets', 'People & families'], mediums: ['Oil'], images: [],
-    blurb: 'A sample artist used only to preview the checkout.',
-    pricing: { mode: 'flat', sizes: { '8x10': 180, '16x20': 650, '24x36': 1600 }, extraPct: 0.25, rushPct: 0.25,
-               depositPct: 0.5, payInFullUnder: 300 }
-  };
-
   function find(slug, allowExample) {
     for (var i = 0; i < ARTISTS.length; i++) if (ARTISTS[i].slug === slug) return ARTISTS[i];
-    return allowExample && slug === EXAMPLE.slug ? EXAMPLE : null;
+    return null;
   }
 
   function sizes(artist) {
@@ -74,7 +65,7 @@
                     (count > 1 ? ' · ' + count + ' subjects' : '') + (rush ? ' · rush' : '') };
   }
 
-  g.AFC = { FEE: FEE, ARTISTS: ARTISTS, EXAMPLE: EXAMPLE, find: find, sizes: sizes, quote: quote };
+  g.AFC = { FEE: FEE, ARTISTS: ARTISTS, find: find, sizes: sizes, quote: quote };
   g.AFC_FEE = FEE;
   g.AFC_ARTISTS = ARTISTS.map(function (a) {
     var from = a.pricing.mode === 'flat' ? Math.min.apply(null, Object.keys(a.pricing.sizes).map(function (k) { return a.pricing.sizes[k]; }))

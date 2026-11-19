@@ -20,7 +20,6 @@
 <link rel="stylesheet" href="site.css">
 </head>
 <body>
-<div class="preview">Preview for review — not live. Sign-ups and payments are switched off in this preview.</div>
 <header class="gnav" id="top"><div class="gin">
 <a class="brand" href="index.html" style="opacity:1">Artists <span>for</span> Commission</a>
 <nav class="links" aria-label="Main"><a href="index.html">Home</a><a href="artists.html">Find an artist</a><a href="index.html#how">How it works</a><a href="for-artists.html">For artists</a><a class="pill" href="join.html">Join as an artist</a></nav>
@@ -72,7 +71,8 @@ textarea.in{min-height:110px;resize:vertical}
 .done{text-align:center;padding:40px 0}
 .done .tick{width:72px;height:72px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;font-size:36px;margin:0 auto 24px}
 .after{display:grid;gap:12px;text-align:left;max-width:520px;margin:34px auto 0}
-.after div{background:var(--tile);border-radius:16px;padding:18px 20px}
+.after div{min-width:0;overflow-wrap:anywhere;background:var(--tile);border-radius:16px;padding:18px 20px}
+.join>*{min-width:0}
 @media (max-width:900px){.join{grid-template-columns:1fr}.side{position:static;order:-1}.side .acard{display:none}.side .lbl{display:none}}
 @media (max-width:560px){.two{grid-template-columns:1fr}.thumbs{grid-template-columns:repeat(3,minmax(0,1fr))}}
 </style>
@@ -80,7 +80,7 @@ textarea.in{min-height:110px;resize:vertical}
 <div class="join">
 <form id="f" novalidate>
   <h1 class="headline" style="font-size:clamp(34px,5vw,56px)">Apply to <span class="serif">join.</span></h1>
-  <p class="lead" style="margin-top:10px">About five minutes. No fees to join. Your progress is saved on this device.</p>
+  <p class="lead" style="margin-top:10px">About five minutes. No fees to join. At the end your application opens as an email, ready to send with your images.</p>
   <div class="prog" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
   <p class="stepname" id="stepname" aria-live="polite"></p>
 
@@ -106,7 +106,7 @@ textarea.in{min-height:110px;resize:vertical}
     <div class="field"><span class="lbl">Your mediums</span>
       <div class="pick" id="mediums"><button type="button" aria-pressed="false">Oil</button><button type="button" aria-pressed="false">Acrylic</button><button type="button" aria-pressed="false">Watercolor</button><button type="button" aria-pressed="false">Gouache</button><button type="button" aria-pressed="false">Pastel</button><button type="button" aria-pressed="false">Charcoal &amp; pencil</button><button type="button" aria-pressed="false">Digital</button></div></div>
     <div class="field"><span class="lbl">Add 3 to 8 of your best pieces</span>
-      <label class="drop" id="drop"><input type="file" id="files" accept="image/jpeg,image/png,image/webp" multiple hidden><b>Drop images here or tap to choose</b>JPG or PNG. Commissions you've painted are best.</label>
+      <label class="drop" id="drop"><input type="file" id="files" accept="image/jpeg,image/png,image/webp" multiple hidden><b>Drop images here or tap to choose</b>JPG or PNG. They preview your card here; you attach them to your email at the end.</label>
       <div class="thumbs" id="thumbs"></div></div>
     <p class="err" hidden></p>
     <div class="nav2"><button class="btn line back" type="button">Back</button><button class="btn next" type="button">Continue</button></div>
@@ -148,14 +148,16 @@ textarea.in{min-height:110px;resize:vertical}
 
   <section class="done" id="done" hidden style="padding:0">
     <div class="tick" aria-hidden="true">✓</div>
-    <h2 class="headline" style="font-size:clamp(32px,4.5vw,50px)">Thank you, <span class="serif" id="done-name">artist.</span></h2>
-    <p class="lead" style="margin:14px auto 0;max-width:36ch">Your application is in. We'll review your work and email you.</p>
+    <h2 class="headline" style="font-size:clamp(32px,4.5vw,50px)">Almost done, <span class="serif" id="done-name">artist.</span></h2>
+    <p class="lead" style="margin:14px auto 0;max-width:38ch">Your email app has opened with your application. <b style="color:var(--fg)">Attach your 3 to 8 images and press send.</b></p>
     <div class="after">
-      <div><b>1. We review your work.</b><br><span class="muted">A working artist looks at every application.</span></div>
-      <div><b>2. You connect payouts.</b><br><span class="muted">If approved, we send a secure link to connect your bank.</span></div>
+      <div><b>Email didn't open?</b><br><span class="muted">Copy your application below and email it, with your images, to <b style="color:var(--fg)">kimberlysartandphotography@gmail.com</b>.</span>
+        <textarea id="copy-text" class="in" readonly style="margin-top:12px;min-height:150px;font-size:14px" aria-label="Your application"></textarea>
+        <p style="margin-top:10px"><button class="btn small line" type="button" id="copy-btn">Copy application</button></p></div>
+      <div><b>1. We review your work.</b><br><span class="muted">A working artist looks at every application and replies by email.</span></div>
+      <div><b>2. You connect payouts.</b><br><span class="muted">If approved, we send a secure Stripe link to connect your bank.</span></div>
       <div><b>3. Your page goes live.</b><br><span class="muted">Share your link and start taking commissions.</span></div>
     </div>
-    <p class="muted" style="margin-top:30px;font-size:14px">Preview note: nothing was sent. In the live site this step sends the application to Kimberly.</p>
   </section>
 </form>
 
@@ -235,7 +237,7 @@ document.addEventListener('DOMContentLoaded',function(){
   function save(){
     var d={step:step,mode:mode(),styles:picked('styles'),mediums:picked('mediums'),rush:$('rush').checked};
     fields.forEach(function(k){d[k]=$(k).value});
-    try{localStorage.setItem(KEY,JSON.stringify(d));$('saved').textContent='Draft saved on this device. Images are not saved.'}catch(e){}
+    try{localStorage.setItem(KEY,JSON.stringify(d));$('saved').textContent='Draft saved on this device. Images are not saved; you attach them to your email at the end.'}catch(e){}
   }
   function load(){
     try{var d=JSON.parse(localStorage.getItem(KEY)||'null');if(!d)return;
@@ -270,16 +272,31 @@ document.addEventListener('DOMContentLoaded',function(){
   document.addEventListener('change',function(){preview();save()});
   document.querySelectorAll('.next').forEach(function(b){b.addEventListener('click',function(){if(check(step)){show(step+1);save()}})});
   document.querySelectorAll('.back').forEach(function(b){b.addEventListener('click',function(){show(step-1);save()})});
+  function summary(){
+    var L=[];
+    L.push('ARTIST APPLICATION · Artists for Commission','');
+    L.push('Name / studio: '+$('name').value.trim(),'Email: '+$('email').value.trim(),'City and state: '+$('city').value.trim());
+    if($('link').value.trim()) L.push('Instagram or website: '+$('link').value.trim());
+    L.push('Style: '+$('bio').value.trim(),'');
+    L.push('Paints: '+picked('styles').join(', '),'Mediums: '+picked('mediums').join(', '),'');
+    if(mode()==='sqin') L.push('Pricing: $'+$('rate').value+' per square inch, extra subject +'+Math.round(parseFloat($('extra').value)*100)+'%');
+    else L.push('Pricing: 8x10 $'+$('p-small').value+' · 16x20 $'+$('p-med').value+' · 24x36 $'+$('p-large').value);
+    L.push('Usual time for a medium piece: '+$('turn').value,'Rush orders: '+($('rush').checked?'yes':'no'),'');
+    L.push('Agreed: my own work · '+Math.round(AFC_FEE*100)+'% platform fee · artist terms','','I am attaching '+images.length+' images of my work to this email.');
+    return L.join('\n');
+  }
   $('send').addEventListener('click',function(){
     if(!check(4)) return;
-    /* LIVE SITE: send the application here (form service + image upload). The preview sends nothing. */
+    var to='kimberlysartandphotography@gmail.com',sub='Artist application: '+$('name').value.trim(),body=summary();
+    location.href='mailto:'+to+'?subject='+encodeURIComponent(sub)+'&body='+encodeURIComponent(body);
     panels.forEach(function(p){p.hidden=true}); $('done').hidden=false;
     $('done-name').textContent=($('name').value.trim().split(' ')[0]||'artist')+'.';
+    $('copy-text').value='To: '+to+'\nSubject: '+sub+'\n\n'+body;
     document.querySelectorAll('.prog span').forEach(function(s){s.classList.add('on')});
-    $('stepname').textContent='Application sent';
-    try{localStorage.removeItem(KEY)}catch(e){}
+    $('stepname').textContent='Last step: send the email';
     scrollTo({top:0});
   });
+  $('copy-btn').addEventListener('click',function(){var t=$('copy-text');t.select();try{navigator.clipboard.writeText(t.value).then(function(){$('copy-btn').textContent='Copied'})}catch(e){document.execCommand&&document.execCommand('copy');$('copy-btn').textContent='Copied'}});
   load(); preview(); show(1);
 });
 </script>

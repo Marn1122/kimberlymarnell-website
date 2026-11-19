@@ -10,7 +10,8 @@ globalThis.fetch = async (url, init = {}) => {
   return new Response('{}', { status: 404 });
 };
 // test artist with Stripe
-AFC.ARTISTS.push(Object.assign({}, AFC.EXAMPLE, { slug: 'jane-doe', name: 'Jane Doe', example: false }));
+AFC.ARTISTS.push({ slug: 'jane-doe', name: 'Jane Doe', payWith: 'stripe', styles: ['Pets'], mediums: ['Oil'], images: [],
+  pricing: { mode: 'flat', sizes: { '8x10': 180, '16x20': 650, '24x36': 1600 }, extraPct: 0.25, rushPct: 0.25, depositPct: 0.5, payInFullUnder: 300 } });
 const env = { STRIPE_SECRET_KEY: 'sk_test_x', ARTIST_ACCOUNTS: '{"jane-doe":"acct_123ABC"}', SITE_URL: 'https://www.artistsforcommission.com' };
 const post = (o) => new Request('https://pay.example/checkout', { method: 'POST', body: new URLSearchParams(o) });
 let ok = 0, bad = 0; const t = (name, c) => { c ? ok++ : bad++; console.log((c ? 'PASS ' : 'FAIL ') + name); };
