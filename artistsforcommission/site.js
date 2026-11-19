@@ -1,24 +1,6 @@
 /* Artists for Commission — shared data and behaviour for every page. */
 
-/* Platform fee taken from the artist's sale. One number, change it here only. */
-window.AFC_FEE = 0.10;
-
-/* Approved artists on the marketplace. Only real, approved artists go in this list. */
-window.AFC_ARTISTS = [
-  {
-    slug: 'kimberly-marnell',
-    name: 'Kimberly Marnell',
-    founding: true,
-    location: 'Irvine, California',
-    page: 'artist-kimberly-marnell.html',
-    orderUrl: 'commission.html',
-    styles: ['Pets', 'People & families', 'Homes & places'],
-    mediums: ['Oil', 'Acrylic'],
-    from: 200,
-    blurb: 'Expressive portraits in oil and acrylic, often wrapped in flowers, sky and warm light.',
-    images: ['img/golden-hour.jpg', 'img/queen-of-the-night.jpg', 'img/take-me-back.jpg']
-  }
-];
+/* The artist list, prices and fee live in artists.js (loaded before this file). */
 
 window.afcMoney = function (n) {
   return '$' + Math.round(n).toLocaleString('en-US');
@@ -50,3 +32,6 @@ window.afcMoney = function (n) {
   document.querySelectorAll('[data-fee]').forEach(function (e) { e.textContent = pct + '%'; });
   document.querySelectorAll('[data-keep]').forEach(function (e) { e.textContent = (100 - pct) + '%'; });
 })();
+
+/* Address of the payment worker (Cloudflare). Empty until it is set up; checkout stays off while empty. */
+window.AFC_PAY_URL = window.AFC_PAY_URL || '';

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Order a commission · Artists for Commission</title>
+<meta name="description" content="Order a custom painting from your photos. See your exact price, pay securely, and your artist is paid directly.">
+<link rel="canonical" href="https://www.artistsforcommission.com/order">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Order a commission · Artists for Commission">
+<meta property="og:description" content="Order a custom painting from your photos. See your exact price, pay securely, and your artist is paid directly.">
+<meta property="og:url" content="https://www.artistsforcommission.com/order">
+<meta property="og:image" content="https://www.artistsforcommission.com/img/golden-hour.jpg">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap">
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<div class="preview">Preview for review — not live. Sign-ups and payments are switched off in this preview.</div>
+<header class="gnav" id="top"><div class="gin">
+<a class="brand" href="index.html" style="opacity:1">Artists <span>for</span> Commission</a>
+<nav class="links" aria-label="Main"><a href="index.html">Home</a><a href="artists.html" aria-current="page">Find an artist</a><a href="index.html#how">How it works</a><a href="for-artists.html">For artists</a><a class="pill" href="join.html">Join as an artist</a></nav>
+<button class="menu" type="button" aria-expanded="false" aria-label="Open menu">Menu</button>
+</div></header>
+<style>
+.order{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:48px;align-items:start;padding-block:clamp(40px,6vw,70px) 100px}
+.grp{display:grid;gap:12px;margin-bottom:30px}
+.lbl{font-weight:600;font-size:17px}
+.opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.opt label{display:block;border:1.5px solid var(--line);border-radius:16px;padding:14px 16px;cursor:pointer;transition:border-color .2s,background .2s}
+.opt label b{display:block;font-weight:600}
+.opt label span{font-size:14px;color:var(--muted)}
+.opt input:checked+label{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 8%,var(--bg))}
+.opt input:focus-visible+label{outline:2px solid var(--accent);outline-offset:2px}
+.in{width:100%;font:inherit;font-size:17px;color:var(--fg);background:var(--tile);border:1px solid transparent;border-radius:14px;padding:14px 16px}
+.in:focus{outline:none;border-color:var(--accent);background:var(--bg)}
+textarea.in{min-height:96px;resize:vertical}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.stepper{display:inline-flex;align-items:center;gap:14px;background:var(--tile);border-radius:999px;padding:6px}
+.stepper button{width:40px;height:40px;border-radius:50%;border:0;background:var(--bg);color:var(--fg);font-size:22px;cursor:pointer}
+.stepper output{min-width:24px;text-align:center;font-weight:600;font-size:18px}
+.check{display:flex;gap:12px;align-items:flex-start;cursor:pointer}
+.check input{width:22px;height:22px;accent-color:var(--accent);flex:none;margin-top:1px}
+.sum{position:sticky;top:76px;background:var(--tile);border-radius:var(--r);padding:28px;display:grid;gap:12px}
+.sum .line{display:flex;justify-content:space-between;gap:12px;font-variant-numeric:tabular-nums;font-size:15px;color:var(--muted)}
+.sum .tot{display:flex;justify-content:space-between;font-size:22px;font-weight:600;border-top:1px solid var(--line);padding-top:14px;font-variant-numeric:tabular-nums}
+.sum .due{display:flex;justify-content:space-between;font-weight:600;color:var(--accent);font-variant-numeric:tabular-nums}
+.split{border:1.5px dashed var(--line);border-radius:16px;padding:14px 16px;font-size:14px;display:grid;gap:6px}
+.split b{font-variant-numeric:tabular-nums}
+.note{font-size:13px;color:var(--muted)}
+.alert{background:color-mix(in srgb,#d0342c 12%,var(--bg));color:var(--fg);border-radius:14px;padding:14px 16px;margin-bottom:24px}
+.ex{background:#f2c14e;color:#1d1d1f;border-radius:14px;padding:12px 16px;font-size:14px;margin-bottom:24px}
+@media (max-width:900px){.order{grid-template-columns:1fr}.sum{position:static}}
+@media (max-width:560px){.two{grid-template-columns:1fr}}
+</style>
+
+<main class="wrap">
+<div class="order">
+<form id="f" method="post" novalidate>
+  <div id="ex" class="ex" hidden>Example artist, shown only in this preview so you can see checkout. Payment is switched off.</div>
+  <div id="alert" class="alert" hidden role="alert"></div>
+  <p class="eyebrow" id="who">Commission</p>
+  <h1 class="headline" style="font-size:clamp(34px,5vw,54px);margin-bottom:34px">Order your <span class="serif">painting.</span></h1>
+  <input type="hidden" name="artist" id="artist">
+  <div class="grp"><span class="lbl">What should be painted?</span><div class="opts" id="subj"></div></div>
+  <div class="grp"><span class="lbl">Size</span><div class="opts" id="sizes"></div></div>
+  <div class="grp"><span class="lbl">How many people or animals?</span>
+    <div><div class="stepper"><button type="button" id="minus" aria-label="Fewer">−</button><output id="cnt">1</output><button type="button" id="plus" aria-label="More">+</button></div></div>
+    <input type="hidden" name="count" id="count" value="1"><p class="note" id="extra-note"></p></div>
+  <div class="grp"><label class="check"><input type="checkbox" name="rush" id="rush"><span><b>Rush order</b> <span class="muted" id="rush-note"></span></span></label></div>
+  <div class="grp" id="plan-grp"><span class="lbl">How would you like to pay?</span>
+    <div class="opts"><div class="opt"><input type="radio" name="plan" id="pl-dep" value="deposit" checked><label for="pl-dep"><b>Deposit today</b><span id="dep-pct"></span></label></div>
+    <div class="opt"><input type="radio" name="plan" id="pl-full" value="full"><label for="pl-full"><b>Pay in full</b><span>Nothing more to pay later</span></label></div></div></div>
+  <div class="grp"><div class="two"><input class="in" name="name" id="name" autocomplete="name" placeholder="Your name" aria-label="Your name">
+    <input class="in" name="email" id="email" type="email" autocomplete="email" placeholder="Email for your receipt" aria-label="Email"></div>
+    <textarea class="in" name="notes" id="notes" maxlength="450" placeholder="Anything your artist should know? Names, occasion, a date you need it by…" aria-label="Notes for your artist"></textarea></div>
+  <label class="check" style="margin-bottom:26px"><input type="checkbox" id="agree"><span>I understand I'll approve the sketch before painting starts, and the balance is paid when the painting is finished.</span></label>
+  <button class="btn" type="submit" id="pay" style="width:100%">Continue to secure payment</button>
+  <p class="note" style="margin-top:12px;text-align:center">Payments by Stripe. Your card details never touch this site.</p>
+</form>
+<aside class="sum" aria-live="polite">
+  <span class="eyebrow" style="margin:0">Your order</span>
+  <h3 id="s-label" style="font-size:22px"></h3>
+  <div id="s-lines"></div>
+  <div class="tot"><span>Total</span><span id="s-total"></span></div>
+  <div class="due"><span id="s-due-l">Due today</span><span id="s-due"></span></div>
+  <p class="note" id="s-later"></p>
+  <div class="split" id="split"><span class="eyebrow" style="margin:0;color:var(--muted)">Where today's payment goes</span>
+    <div class="line"><span>Artist receives (<span data-keep>90%</span>)</span><b id="sp-artist"></b></div>
+    <div class="line"><span>Artists for Commission (<span data-fee>10%</span>)</span><b id="sp-fee"></b></div>
+    <span class="note">Split automatically by Stripe the moment you pay.</span></div>
+</aside>
+</div>
+</main>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  var $=function(i){return document.getElementById(i)},P=new URLSearchParams(location.search);
+  var ERR={subject:'Please choose what to paint.',size:'Please choose a size.',count:'Please check the number of subjects.',artist:'This artist is not taking orders through checkout yet.',email:'Please enter a valid email address.','not-ready':'This artist is still setting up payments. Please try again soon.',payment:'Payment could not be started. Nothing was charged. Please try again.',order:'We could not find that order number.','nothing-owed':'This order is already paid in full. Thank you!'};
+  var slug=P.get('artist')||'',a=AFC.find(slug,true);
+  if(P.get('error')){$('alert').textContent=ERR[P.get('error')]||ERR.payment;$('alert').hidden=false}
+  if(P.get('cancelled')){$('alert').textContent='Payment cancelled. Nothing was charged. Your choices are below.';$('alert').hidden=false}
+  if(!a){location.replace('artists.html');return}
+  if(a.payWith==='own-form'){location.replace(a.orderUrl+location.search.replace(/[?&]artist=[^&]*/,'').replace(/^&/,'?'));return}
+  $('ex').hidden=!a.example; $('artist').value=a.slug; $('who').textContent='Commission · '+a.name;
+  document.title='Order from '+a.name+' · Artists for Commission';
+  $('f').action=window.AFC_PAY_URL+'/checkout';
+  var p=a.pricing,subjects=[['pet','Pet','Pets'],['person','Person or family','People & families'],['home','Home or place','Homes & places']];
+  $('subj').innerHTML=subjects.filter(function(s){return a.styles.indexOf(s[2])>=0}).map(function(s,i){return '<div class="opt"><input type="radio" name="subject" id="s-'+s[0]+'" value="'+s[0]+'"'+(i===0?' checked':'')+'><label for="s-'+s[0]+'"><b>'+s[1]+'</b></label></div>'}).join('');
+  var pre=P.get('subject'); if(pre&&$('s-'+pre)) $('s-'+pre).checked=true;
+  $('sizes').innerHTML=AFC.sizes(a).map(function(k,i){return '<div class="opt"><input type="radio" name="size" id="z-'+k+'" value="'+k+'"'+(i===Math.min(1,AFC.sizes(a).length-1)?' checked':'')+'><label for="z-'+k+'"><b>'+k.replace('x',' × ')+' in</b><span id="zp-'+k+'"></span></label></div>'}).join('');
+  $('rush-note').textContent=p.rushPct?'· moves you to the front for +'+Math.round(p.rushPct*100)+'%':'';
+  if(!p.rushPct) $('rush').closest('.grp').hidden=true;
+  $('extra-note').textContent='Each extra person or animal adds '+Math.round(p.extraPct*100)+'%.';
+  $('dep-pct').textContent=Math.round(p.depositPct*100)+'% now, the rest when it\'s finished';
+  function v(n){var e=document.querySelector('input[name='+n+']:checked');return e?e.value:''}
+  function m(c){return '$'+(c/100).toLocaleString('en-US',{minimumFractionDigits:c%100?2:0})}
+  function upd(){
+    var o={subject:v('subject'),size:v('size'),count:$('count').value,rush:$('rush').checked,plan:v('plan')},q;
+    try{q=AFC.quote(a,o)}catch(e){return}
+    AFC.sizes(a).forEach(function(k){try{$('zp-'+k).textContent=m(AFC.quote(a,{subject:o.subject,size:k,count:1}).base)}catch(e){}});
+    $('s-label').textContent=q.label;
+    var L=[['Painting',q.base]]; if(q.extra) L.push(['Extra subjects',q.extra]); if(q.rush) L.push(['Rush',q.rush]);
+    $('s-lines').innerHTML=L.map(function(l){return '<div class="line"><span>'+l[0]+'</span><span>'+m(l[1])+'</span></div>'}).join('');
+    $('s-total').textContent=m(q.total); $('s-due').textContent=m(q.due);
+    $('s-due-l').textContent=q.full?'Due today (paid in full)':'Deposit due today';
+    $('s-later').textContent=q.full?'Nothing more to pay.':'Balance of '+m(q.total-q.due)+' after you approve the finished painting.';
+    $('plan-grp').hidden=q.total<p.payInFullUnder*100;
+    $('sp-artist').textContent=m(q.artistGets); $('sp-fee').textContent=m(q.fee);
+  }
+  $('minus').onclick=function(){var c=Math.max(1,+$('count').value-1);$('count').value=c;$('cnt').textContent=c;upd()};
+  $('plus').onclick=function(){var c=Math.min(8,+$('count').value+1);$('count').value=c;$('cnt').textContent=c;upd()};
+  $('f').addEventListener('change',upd); upd();
+  $('f').addEventListener('submit',function(e){
+    var msg='';
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test($('email').value.trim())) msg=ERR.email;
+    else if(!$('agree').checked) msg='Please tick the box to confirm how the sketch and balance work.';
+    else if(a.example||!window.AFC_PAY_URL) msg='Preview only: payment is switched off. On the live site this button opens Stripe checkout.';
+    if(msg){e.preventDefault();$('alert').textContent=msg;$('alert').hidden=false;$('alert').scrollIntoView({block:'center'})}
+    else $('pay').textContent='Opening secure checkout…';
+  });
+});
+</script>
+<footer class="foot"><div class="wrap">
+<div class="cols">
+<div><h4>Commission art</h4><a href="artists.html">Find an artist</a><a href="index.html#styles">Pet portraits</a><a href="index.html#styles">Family &amp; people portraits</a><a href="index.html#styles">Home paintings</a></div>
+<div><h4>For artists</h4><a href="for-artists.html">Why join</a><a href="for-artists.html#fees">Fees</a><a href="join.html">Apply to join</a><a href="for-artists.html#faq">Artist questions</a></div>
+<div><h4>Help</h4><a href="index.html#how">How it works</a><a href="commission-a-painting-from-photos.html">What photos to send</a><a href="https://www.kimberlymarnell.com/returns.html">Returns &amp; refunds</a><a href="mailto:kimberlysartandphotography@gmail.com">Contact us</a></div>
+<div><h4>Our fine art partner</h4><a href="https://www.kimberlymarnell.com/">Kimberly Marnell Fine Art ↗</a><a href="https://www.kimberlymarnell.com/collect.html">Original paintings ↗</a><a href="https://www.kimberlymarnell.com/designers.html">Interior designer trade ↗</a></div>
+</div>
+<div class="partner"><span>© 2026 Artists for Commission · A Haven Art House studio · Irvine, California</span><span>Kimberly Marnell Fine Art is our partner.</span></div>
+</div></footer>
+<script src="artists.js"></script>
+<script src="site.js"></script>
+</body>
+</html>

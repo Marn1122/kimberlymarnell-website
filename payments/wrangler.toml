@@ -1,0 +1,9 @@
+# Only needed if the worker is deployed from the command line (npx wrangler deploy).
+# Kimberly's setup uses the Cloudflare dashboard instead: see SETUP.md.
+name = "afc-payments"
+main = "worker.js"
+compatibility_date = "2026-11-01"
+
+[vars]
+SITE_URL = "https://www.artistsforcommission.com"
+# ARTIST_ACCOUNTS and STRIPE_SECRET_KEY are set in the Cloudflare dashboard, never here.

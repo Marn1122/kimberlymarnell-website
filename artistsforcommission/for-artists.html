@@ -84,7 +84,7 @@
     <div class="tiles t3" style="margin-top:50px">
       <div class="tile rv"><svg class="icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M40 6 20 26"/><path d="M20 26c-5-1-9 2-10 7-1 4-3 6-6 7 8 2 16 0 18-6 1-3 0-6-2-8z"/></svg><h3>A portfolio page</h3><p class="muted">A clean page for your work, styles and prices that you can share anywhere.</p></div>
       <div class="tile rv"><svg class="icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="38" height="26" rx="4"/><path d="M5 19h38M12 30h8"/></svg><h3>You set the prices</h3><p class="muted">Per square inch or flat prices per size. Deposits and rush fees, your call.</p></div>
-      <div class="tile rv"><svg class="icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M24 5 9 11v11c0 10 6 17 15 21 9-4 15-11 15-21V11z"/><path d="m17 24 5 5 9-10"/></svg><h3>Paid securely</h3><p class="muted">Clients pay through secure checkout. Your share goes straight to your bank.</p></div>
+      <div class="tile rv"><svg class="icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M24 5 9 11v11c0 10 6 17 15 21 9-4 15-11 15-21V11z"/><path d="m17 24 5 5 9-10"/></svg><h3>Paid securely</h3><p class="muted">Clients pay through Stripe checkout. Your <span data-keep>90%</span> is split off automatically and paid to your bank.</p></div>
       <div class="tile rv"><svg class="icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 24s8-14 21-14 21 14 21 14-8 14-21 14S3 24 3 24z"/><circle cx="24" cy="24" r="6"/></svg><h3>Sketch approval</h3><p class="muted">Clients approve the sketch before you paint, so fewer surprises for everyone.</p></div>
       <div class="tile rv"><svg class="icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m24 6 5.5 11.2 12.3 1.8-8.9 8.7 2.1 12.3L24 34.2 13 40l2.1-12.3-8.9-8.7 12.3-1.8z"/></svg><h3>Clients find you</h3><p class="muted">We market the site to people looking for portraits. You focus on painting.</p></div>
       <div class="tile rv"><svg class="icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15 24 6l18 9v18l-18 9-18-9z"/><path d="m6 15 18 9 18-9M24 24v18"/></svg><h3>Keep your style</h3><p class="muted">No templates and no house style. Clients come for the way you paint.</p></div>
@@ -109,7 +109,7 @@
     <h2 class="headline rv" style="margin-bottom:30px">Questions.</h2>
     <details><summary>Does it cost anything to join?</summary><p>No. There is no sign-up fee, monthly fee or listing fee. We take <span data-fee>10%</span> only when you are paid for a commission.</p></details>
     <details><summary>When is the fee taken?</summary><p>Automatically, from each payment the client makes through the site, including deposits and final payments. You never get a separate bill.</p></details>
-    <details><summary>How do I get paid?</summary><p>Through our secure payment partner. You connect your bank account once, and your share of each payment is sent there.</p></details>
+    <details><summary>How do I get paid?</summary><p>Through Stripe. You connect your bank account once. When a client pays, Stripe splits the payment automatically: <span data-keep>90%</span> goes to your Stripe account and pays out to your bank, and <span data-fee>10%</span> goes to Artists for Commission. Nobody has to send you money by hand.</p></details>
     <details><summary>Who sets the prices?</summary><p>You do. Choose a price per square inch or a flat price for each size, plus any extras like more figures or rush orders.</p></details>
     <details><summary>Who owns the artwork?</summary><p>You keep the copyright to your work. The client owns the physical painting. Reproduction or commercial use is agreed separately between you and the client.</p></details>
     <details><summary>What kind of artists are you looking for?</summary><p>Painters and illustrators who create portraits of pets, people, families or homes from photos, with a consistent, professional portfolio.</p></details>
@@ -144,6 +144,7 @@ document.addEventListener('DOMContentLoaded',function(){
 </div>
 <div class="partner"><span>© 2026 Artists for Commission · A Haven Art House studio · Irvine, California</span><span>Kimberly Marnell Fine Art is our partner.</span></div>
 </div></footer>
+<script src="artists.js"></script>
 <script src="site.js"></script>
 </body>
 </html>
