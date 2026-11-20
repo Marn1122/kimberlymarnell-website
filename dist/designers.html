@@ -23,10 +23,10 @@ a{color:inherit}
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
 .wrap{max-width:1180px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
 
-.top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-block:20px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-block:20px;position:relative;z-index:2}
 .pill{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border:1px solid var(--line);border-radius:999px;text-decoration:none;font-size:14px;font-weight:500;background:color-mix(in srgb,var(--surface) 70%,transparent)}
 header.hero{position:relative;isolation:isolate;padding-block:36px 28px}
-header.hero::before{content:"";position:absolute;z-index:-1;left:-15%;top:-60%;width:60%;aspect-ratio:1;
+header.hero::before{pointer-events:none;content:"";position:absolute;z-index:-1;left:-15%;top:-60%;width:60%;aspect-ratio:1;
   background:radial-gradient(circle at 45% 55%,var(--glow-a) 0%,transparent 55%),radial-gradient(circle at 25% 85%,var(--glow-b) 0%,transparent 45%);filter:blur(70px);opacity:.4}
 .eyebrow{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 14px}
 h1{font-size:clamp(40px,6vw,80px);line-height:.95;letter-spacing:-.045em;font-weight:500;margin:0;text-wrap:balance;max-width:16ch}
