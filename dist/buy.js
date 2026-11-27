@@ -4,6 +4,8 @@
    To add or change a painting, edit WORKS below. plan = the Bluevine link for one third of the price. */
 (function () {
   var MAIL = 'studio@kimberlymarnell.com';
+  var PAY3 = false; // turns on by itself once Stripe automatic Pay in 3 is set up on the server
+  try { fetch('/api/pay3?check=1', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) { PAY3 = !!(d && d.configured); if (root && !root.hidden) render(); }).catch(function () {}); } catch (e) {}
   // key = Bluevine link id of the full-price payment
   var WORKS = {
     '91028cd1413748419e020d2d4b60667d': { t: 'Queen of the Night', p: 2600, img: 'img/queen-of-the-night.jpg', plan: '' },
@@ -93,10 +95,11 @@
         '<li><span>' + fmt(addMonths(today, 2)) + '</span><span>' + money(ps[2]) + '</span></li>' +
         '<li class="tot"><span>Total · no interest or fees</span><span>' + money(w.p) + '</span></li>';
       notes.innerHTML = '<li>Your first payment reserves the painting and takes it off sale.</li>' +
-        '<li>Before each payment you get an email reminder with a secure payment link.</li>' +
+        (PAY3 ? '<li>Payments 2 and 3 are charged automatically to the same card or bank account. Nothing to remember.</li>' : '<li>Before each payment you get an email reminder with a secure payment link.</li>') +
         '<li>It ships free and insured in the US, with its certificate, after the final payment.</li>' +
         '<li>To change or cancel, email before the next payment date; refunds follow the returns policy.</li>';
-      if (w.plan) { go.href = w.plan; go.target = '_blank'; go.textContent = 'Pay ' + money(ps[0]) + ' today ↗'; }
+      if (PAY3) { go.href = '/api/pay3?work=' + encodeURIComponent(cur); go.removeAttribute('target'); go.textContent = 'Pay ' + money(ps[0]) + ' today · then automatic ↗'; }
+      else if (w.plan) { go.href = w.plan; go.target = '_blank'; go.textContent = 'Pay ' + money(ps[0]) + ' today ↗'; }
       else { go.href = mailto('Pay in 3: ' + w.t, 'Hi Kimberly,\n\nI would like to buy ' + w.t + ' (' + money(w.p) + ') with Pay in 3: ' + money(ps[0]) + ' today, then ' + money(ps[1]) + ' and ' + money(ps[2]) + ' monthly, no interest or fees. Please send my first payment link.\n\nName:\nCity, State:\nPhone (optional):\n'); go.removeAttribute('target'); go.textContent = 'Start Pay in 3 · ' + money(ps[0]) + ' today'; }
     }
   }
