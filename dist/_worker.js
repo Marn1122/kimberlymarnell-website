@@ -3,7 +3,9 @@
 // Used by the Cloudflare Pages Functions in /functions/api (they run on www.kimberlymarnell.com).
 // Secrets are set by Kimberly in Cloudflare → Pages → kimberlymarnell → Settings → Variables:
 //   STRIPE_SECRET_KEY      (Stripe → Developers → API keys → Secret key)
-//   STRIPE_WEBHOOK_SECRET  (Stripe → Developers → Webhooks → this endpoint → Signing secret)
+//   STRIPE_WEBHOOK_SECRET  (optional; only if a Stripe webhook is added later)
+// Each plan is locked to exactly three payments right after checkout (success redirect), and a background
+// sweep on site visits locks any plan whose buyer closed the page early, so no webhook is required.
 // Nothing secret is stored in this repository.
 
 const SITE = 'https://www.kimberlymarnell.com';
@@ -85,17 +87,17 @@ async function startCheckout(env, key, now = new Date(), fetchImpl) {
     shipping_address_collection: { allowed_countries: { 0: 'US' } },
     phone_number_collection: { enabled: true },
     custom_text: { submit: { message: terms } },
-    success_url: `${SITE}/thank-you.html?plan=1&work=${encodeURIComponent(w.t)}`,
+    success_url: `${SITE}/api/pay3-done?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${SITE}/${w.page || 'index.html#originals'}`
   }, fetchImpl);
   return { status: 303, url: session.url };
 }
 
 // Step 2: after the first payment, fix the plan to exactly three charges and stop
-async function lockPlan(env, session, fetchImpl) {
-  if (!session || session.mode !== 'subscription' || !session.metadata || session.metadata.kind !== 'pay3') return 'ignored';
-  const sub = await stripe(env, 'GET', 'subscriptions/' + session.subscription, null, fetchImpl);
+async function lockSubscription(env, sub, fetchImpl) {
+  if (!sub || !sub.metadata || sub.metadata.kind !== 'pay3') return 'ignored';
   if (sub.schedule) return 'already_scheduled';
+  if (sub.status !== 'active' && sub.status !== 'trialing') return 'not_active';
   const total = Number(sub.metadata.total), [a, , c] = split(total);
   const item = sub.items.data[0];
   const sched = await stripe(env, 'POST', 'subscription_schedules', { from_subscription: sub.id }, fetchImpl);
@@ -105,6 +107,26 @@ async function lockPlan(env, session, fetchImpl) {
         1: { items: { 0: { quantity: 1, price_data: { currency: 'usd', product: item.price.product, unit_amount: c, recurring: { interval: 'month' } } } }, iterations: 1 } };
   await stripe(env, 'POST', 'subscription_schedules/' + sched.id, { end_behavior: 'cancel', proration_behavior: 'none', phases }, fetchImpl);
   return 'locked';
+}
+async function lockPlan(env, session, fetchImpl) {
+  if (!session || session.mode !== 'subscription' || !session.metadata || session.metadata.kind !== 'pay3' || !session.subscription) return 'ignored';
+  const sub = await stripe(env, 'GET', 'subscriptions/' + session.subscription, null, fetchImpl);
+  return lockSubscription(env, sub, fetchImpl);
+}
+// After checkout: lock the plan, then show the thank-you page
+async function finishCheckout(env, sessionId, fetchImpl) {
+  const session = await stripe(env, 'GET', 'checkout/sessions/' + encodeURIComponent(sessionId), null, fetchImpl);
+  let result = 'ignored';
+  try { result = await lockPlan(env, session, fetchImpl); } catch (e) { result = 'retry_later'; }
+  const title = (session.metadata && session.metadata.title) || '';
+  return { result, url: `${SITE}/thank-you.html?plan=1&work=${encodeURIComponent(title)}` };
+}
+// Safety net: lock any active Pay in 3 plan that is not locked yet (buyer closed the page before the redirect)
+async function sweep(env, fetchImpl) {
+  const r = await stripe(env, 'GET', 'subscriptions/search', { query: "metadata['kind']:'pay3' AND status:'active'", limit: 50 }, fetchImpl);
+  const out = [];
+  for (const sub of r.data || []) if (!sub.schedule) out.push(await lockSubscription(env, sub, fetchImpl).catch(() => 'error'));
+  return out;
 }
 
 // Stripe webhook signature check (t=…,v1=… HMAC-SHA256 of "t.payload")
@@ -119,16 +141,26 @@ async function verify(payload, header, secret, toleranceSec = 300, nowSec = Math
   return sigs.some((s) => s.length === hex.length && [...s].every((ch, i) => ch === hex[i]));
 }
 
-async function handlePay3(request, env) {
+async function handlePay3(request, env, ctx) {
   const url = new URL(request.url);
-  if (url.searchParams.get('check') === '1') return Response.json({ ok: true, configured: !!(env.STRIPE_SECRET_KEY && env.STRIPE_WEBHOOK_SECRET) }, { headers: { 'cache-control': 'no-store' } });
+  if (url.searchParams.get('check') === '1') {
+    if (env.STRIPE_SECRET_KEY && ctx && ctx.waitUntil && Math.random() < 0.25) ctx.waitUntil(sweep(env).catch(() => {}));
+    return Response.json({ ok: true, configured: !!env.STRIPE_SECRET_KEY }, { headers: { 'cache-control': 'no-store' } });
+  }
   try {
     const r = await startCheckout(env, url.searchParams.get('work') || '');
     if (r.url) return Response.redirect(r.url, 303);
     return Response.redirect(SITE + '/pay-in-3-unavailable.html?reason=' + r.error, 303);
   } catch (e) { return Response.redirect(SITE + '/pay-in-3-unavailable.html?reason=error', 303); }
 }
+async function handleDone(request, env) {
+  const id = new URL(request.url).searchParams.get('session_id') || '';
+  if (!/^cs_[A-Za-z0-9_]+$/.test(id) || !env.STRIPE_SECRET_KEY) return Response.redirect(SITE + '/thank-you.html?plan=1', 303);
+  try { const r = await finishCheckout(env, id); return Response.redirect(r.url, 303); }
+  catch (e) { return Response.redirect(SITE + '/thank-you.html?plan=1', 303); }
+}
 async function handleWebhook(request, env) {
+  if (!env.STRIPE_WEBHOOK_SECRET) return new Response('not configured', { status: 404 });
   const payload = await request.text();
   if (!(await verify(payload, request.headers.get('stripe-signature'), env.STRIPE_WEBHOOK_SECRET))) return new Response('bad signature', { status: 400 });
   const event = JSON.parse(payload);
@@ -140,7 +172,8 @@ export default {
   async fetch(request, env, ctx) {
     const { pathname } = new URL(request.url);
     try {
-      if (pathname === '/api/pay3' && request.method === 'GET') return await handlePay3(request, env);
+      if (pathname === '/api/pay3' && request.method === 'GET') return await handlePay3(request, env, ctx);
+      if (pathname === '/api/pay3-done' && request.method === 'GET') return await handleDone(request, env);
       if (pathname === '/api/stripe-webhook' && request.method === 'POST') return await handleWebhook(request, env);
     } catch (e) { /* never let the payment code take the site down */ }
     return env.ASSETS.fetch(request);

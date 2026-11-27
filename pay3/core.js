@@ -2,7 +2,9 @@
 // Used by the Cloudflare Pages Functions in /functions/api (they run on www.kimberlymarnell.com).
 // Secrets are set by Kimberly in Cloudflare → Pages → kimberlymarnell → Settings → Variables:
 //   STRIPE_SECRET_KEY      (Stripe → Developers → API keys → Secret key)
-//   STRIPE_WEBHOOK_SECRET  (Stripe → Developers → Webhooks → this endpoint → Signing secret)
+//   STRIPE_WEBHOOK_SECRET  (optional; only if a Stripe webhook is added later)
+// Each plan is locked to exactly three payments right after checkout (success redirect), and a background
+// sweep on site visits locks any plan whose buyer closed the page early, so no webhook is required.
 // Nothing secret is stored in this repository.
 
 export const SITE = 'https://www.kimberlymarnell.com';
@@ -84,17 +86,17 @@ export async function startCheckout(env, key, now = new Date(), fetchImpl) {
     shipping_address_collection: { allowed_countries: { 0: 'US' } },
     phone_number_collection: { enabled: true },
     custom_text: { submit: { message: terms } },
-    success_url: `${SITE}/thank-you.html?plan=1&work=${encodeURIComponent(w.t)}`,
+    success_url: `${SITE}/api/pay3-done?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${SITE}/${w.page || 'index.html#originals'}`
   }, fetchImpl);
   return { status: 303, url: session.url };
 }
 
 // Step 2: after the first payment, fix the plan to exactly three charges and stop
-export async function lockPlan(env, session, fetchImpl) {
-  if (!session || session.mode !== 'subscription' || !session.metadata || session.metadata.kind !== 'pay3') return 'ignored';
-  const sub = await stripe(env, 'GET', 'subscriptions/' + session.subscription, null, fetchImpl);
+export async function lockSubscription(env, sub, fetchImpl) {
+  if (!sub || !sub.metadata || sub.metadata.kind !== 'pay3') return 'ignored';
   if (sub.schedule) return 'already_scheduled';
+  if (sub.status !== 'active' && sub.status !== 'trialing') return 'not_active';
   const total = Number(sub.metadata.total), [a, , c] = split(total);
   const item = sub.items.data[0];
   const sched = await stripe(env, 'POST', 'subscription_schedules', { from_subscription: sub.id }, fetchImpl);
@@ -104,6 +106,26 @@ export async function lockPlan(env, session, fetchImpl) {
         1: { items: { 0: { quantity: 1, price_data: { currency: 'usd', product: item.price.product, unit_amount: c, recurring: { interval: 'month' } } } }, iterations: 1 } };
   await stripe(env, 'POST', 'subscription_schedules/' + sched.id, { end_behavior: 'cancel', proration_behavior: 'none', phases }, fetchImpl);
   return 'locked';
+}
+export async function lockPlan(env, session, fetchImpl) {
+  if (!session || session.mode !== 'subscription' || !session.metadata || session.metadata.kind !== 'pay3' || !session.subscription) return 'ignored';
+  const sub = await stripe(env, 'GET', 'subscriptions/' + session.subscription, null, fetchImpl);
+  return lockSubscription(env, sub, fetchImpl);
+}
+// After checkout: lock the plan, then show the thank-you page
+export async function finishCheckout(env, sessionId, fetchImpl) {
+  const session = await stripe(env, 'GET', 'checkout/sessions/' + encodeURIComponent(sessionId), null, fetchImpl);
+  let result = 'ignored';
+  try { result = await lockPlan(env, session, fetchImpl); } catch (e) { result = 'retry_later'; }
+  const title = (session.metadata && session.metadata.title) || '';
+  return { result, url: `${SITE}/thank-you.html?plan=1&work=${encodeURIComponent(title)}` };
+}
+// Safety net: lock any active Pay in 3 plan that is not locked yet (buyer closed the page before the redirect)
+export async function sweep(env, fetchImpl) {
+  const r = await stripe(env, 'GET', 'subscriptions/search', { query: "metadata['kind']:'pay3' AND status:'active'", limit: 50 }, fetchImpl);
+  const out = [];
+  for (const sub of r.data || []) if (!sub.schedule) out.push(await lockSubscription(env, sub, fetchImpl).catch(() => 'error'));
+  return out;
 }
 
 // Stripe webhook signature check (t=…,v1=… HMAC-SHA256 of "t.payload")

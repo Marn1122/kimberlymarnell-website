@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { split, form, startCheckout, lockPlan, verify, WORKS } from './core.js';
+import { split, form, startCheckout, lockPlan, verify, WORKS, sweep, finishCheckout } from './core.js';
 import { createHmac } from 'node:crypto';
 let n = 0; const t = async (name, f) => { await f(); n++; console.log('ok', name); };
 
@@ -36,7 +36,7 @@ await t('checkout session: first third, monthly, terms with dates', async () => 
 });
 await t('lockPlan: 2 + 1 phases, cancel at end', async () => {
   const f = mock([
-    [/subscriptions\/sub_1$/, { method: 'GET', res: { id: 'sub_1', schedule: null, metadata: { total: '260000' }, items: { data: [{ price: { id: 'price_1', product: 'prod_1' } }] } } }],
+    [/subscriptions\/sub_1$/, { method: 'GET', res: { id: 'sub_1', status: 'active', schedule: null, metadata: { kind: 'pay3', total: '260000' }, items: { data: [{ price: { id: 'price_1', product: 'prod_1' } }] } } }],
     [/subscription_schedules$/, { res: { id: 'sub_sched_1', phases: [{ start_date: 111 }] } }],
     [/subscription_schedules\/sub_sched_1/, { res: { id: 'sub_sched_1' } }]]);
   const r = await lockPlan(env, { mode: 'subscription', subscription: 'sub_1', metadata: { kind: 'pay3' } }, f);
@@ -47,14 +47,14 @@ await t('lockPlan: 2 + 1 phases, cancel at end', async () => {
 });
 await t('lockPlan: equal payments → one phase of 3', async () => {
   const f = mock([
-    [/subscriptions\/sub_2$/, { method: 'GET', res: { id: 'sub_2', schedule: null, metadata: { total: '150000' }, items: { data: [{ price: { id: 'p', product: 'pr' } }] } } }],
+    [/subscriptions\/sub_2$/, { method: 'GET', res: { id: 'sub_2', status: 'active', schedule: null, metadata: { kind: 'pay3', total: '150000' }, items: { data: [{ price: { id: 'p', product: 'pr' } }] } } }],
     [/subscription_schedules$/, { res: { id: 's2', phases: [{ start_date: 5 }] } }], [/subscription_schedules\/s2/, { res: {} }]]);
   await lockPlan(env, { mode: 'subscription', subscription: 'sub_2', metadata: { kind: 'pay3' } }, f);
   const body = decodeURIComponent(f.calls[2].init.body); assert.match(body, /phases\[0\]\[iterations\]=3/); assert.doesNotMatch(body, /phases\[1\]/);
 });
 await t('lockPlan ignores other checkouts and is idempotent', async () => {
   assert.equal(await lockPlan(env, { mode: 'payment', metadata: {} }, mock([])), 'ignored');
-  const f = mock([[/subscriptions\/sub_3$/, { res: { id: 'sub_3', schedule: 'sched_x', metadata: { total: '1' }, items: { data: [] } } }]]);
+  const f = mock([[/subscriptions\/sub_3$/, { res: { id: 'sub_3', schedule: 'sched_x', metadata: { kind: 'pay3', total: '1' }, items: { data: [] } } }]]);
   assert.equal(await lockPlan(env, { mode: 'subscription', subscription: 'sub_3', metadata: { kind: 'pay3' } }, f), 'already_scheduled');
 });
 await t('webhook signature', async () => {
@@ -63,5 +63,21 @@ await t('webhook signature', async () => {
   assert.equal(await verify(p, `t=${now},v1=${sig}`, 'whsec_y', 300, now), false);
   assert.equal(await verify(p + ' ', `t=${now},v1=${sig}`, 'whsec_x', 300, now), false);
   assert.equal(await verify(p, `t=${now - 1000},v1=${sig}`, 'whsec_x', 300, now), false);
+});
+await t('success redirect locks the plan and thanks the buyer', async () => {
+  const f = mock([
+    [/checkout\/sessions\/cs_1/, { res: { mode: 'subscription', subscription: 'sub_9', metadata: { kind: 'pay3', title: 'Golden Hour' } } }],
+    [/subscriptions\/sub_9$/, { method: 'GET', res: { id: 'sub_9', status: 'active', schedule: null, metadata: { kind: 'pay3', total: '150000' }, items: { data: [{ price: { id: 'p', product: 'pr' } }] } } }],
+    [/subscription_schedules$/, { res: { id: 's9', phases: [{ start_date: 1 }] } }], [/subscription_schedules\/s9/, { res: {} }]]);
+  const r = await finishCheckout(env, 'cs_1', f);
+  assert.equal(r.result, 'locked'); assert.match(r.url, /thank-you\.html\?plan=1&work=Golden%20Hour/);
+});
+await t('sweep locks only unlocked plans', async () => {
+  const f = mock([
+    [/subscriptions\/search/, { res: { data: [
+      { id: 'a', status: 'active', schedule: 'sched', metadata: { kind: 'pay3', total: '150000' }, items: { data: [] } },
+      { id: 'b', status: 'active', schedule: null, metadata: { kind: 'pay3', total: '150000' }, items: { data: [{ price: { id: 'p', product: 'pr' } }] } }] } }],
+    [/subscription_schedules$/, { res: { id: 'sb', phases: [{ start_date: 1 }] } }], [/subscription_schedules\/sb/, { res: {} }]]);
+  assert.deepEqual(await sweep(env, f), ['locked']);
 });
 console.log(n, 'tests passed');
