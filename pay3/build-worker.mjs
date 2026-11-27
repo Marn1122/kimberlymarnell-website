@@ -8,7 +8,8 @@ async function handlePay3(request, env, ctx) {
   const url = new URL(request.url);
   if (url.searchParams.get('check') === '1') {
     if (env.STRIPE_SECRET_KEY && ctx && ctx.waitUntil && Math.random() < 0.25) ctx.waitUntil(sweep(env).catch(() => {}));
-    return Response.json({ ok: true, configured: !!env.STRIPE_SECRET_KEY }, { headers: { 'cache-control': 'no-store' } });
+    // the website only offers automatic Pay in 3 once a LIVE key is set; a test key works only for direct practice links
+    return Response.json({ ok: true, configured: /^(sk|rk)_live_/.test(env.STRIPE_SECRET_KEY || ''), mode: /^(sk|rk)_live_/.test(env.STRIPE_SECRET_KEY || '') ? 'live' : (env.STRIPE_SECRET_KEY ? 'test' : 'none') }, { headers: { 'cache-control': 'no-store' } });
   }
   try {
     const r = await startCheckout(env, url.searchParams.get('work') || '');
