@@ -21,8 +21,24 @@
     '69a5b6e71e0b4080bb9dea0b92bc9cb2': { t: 'Comfy', p: 1500, img: 'img/comfy.jpg', plan: '' },
     '313a43052f984c728d1f2ea5e4bb782a': { t: 'Look Me in the Eye', p: 1500, img: 'img/look-me-in-the-eye.jpg', plan: '' },
     '7907f98280ba4642807ad86fb5ac9ae3': { t: 'Blue Vibes', p: 1500, img: 'img/blue-vibes.jpg', plan: '' },
-    'communion': { t: 'Communion with the Earth', p: 10400, img: 'img/communion-with-the-earth.jpg', plan: '', invoice: true }
+    'communion': { t: 'Communion with the Earth', p: 10400, img: 'img/communion-with-the-earth.jpg', plan: '', invoice: true },
+    // not sold through this checkout: clicking their image still shows how to get them
+    'ghostly-glow': { t: 'Ghostly Glow', p: 2000, img: 'img/ghostly-glow.jpg', other: 'saatchi', url: 'https://www.saatchiart.com/art/Painting-Ghostly-Glow/1035491/14328681/view' },
+    'beautiful-wall-flower': { t: 'Beautiful Wall Flower', p: 0, img: 'img/flower-power.jpg', other: 'reserve' },
+    'before-the-taste': { t: 'Before the Taste', p: 5000, img: 'img/before-the-taste.jpg', other: 'inquire' }
   };
+  // image file name → painting (img/<slug>.jpg and img/works/<slug>/…)
+  var SLUG = { 'queen-of-the-night': '91028cd1413748419e020d2d4b60667d', 'golden-hour': '8698eec1870a433f9008e3293f392963', 'take-me-back': 'b8f4179cad2f44e797e10085c0237dcb',
+    'going-home': '2499c431a8884d76ba2bc0ab5b51a43b', 'my-body': '93d40d6841584ba5823933ab5fdc313a', 'the-comfort-of-frosting': 'bc24fd5b4349443fb54e446239c274a7',
+    'appealing-tides-of-excess': '23d07117242f4d06b17e5237744458a2', 'new-beginnings': 'e8ed01d5c72a438dbf43207e64272a56', 'flourish': 'bb693256e8b243949bc29787ff58d15d',
+    'impossible-traffic': 'b247ba669f7e40d7af80056336f0a284', 'comfy': '69a5b6e71e0b4080bb9dea0b92bc9cb2', 'look-me-in-the-eye': '313a43052f984c728d1f2ea5e4bb782a',
+    'blue-vibes': '7907f98280ba4642807ad86fb5ac9ae3', 'communion-with-the-earth': 'communion', 'ghostly-glow': 'ghostly-glow', 'flower-power': 'beautiful-wall-flower',
+    'beautiful-wall-flower': 'beautiful-wall-flower', 'before-the-taste': 'before-the-taste' };
+  var PAGES = { 'queen-of-the-night': 1, 'golden-hour': 1, 'take-me-back': 1, 'going-home': 1, 'flourish': 1, 'communion-with-the-earth': 1 };
+  function imgKey(img) {
+    var src = img.getAttribute('src') || '', m = src.match(/img\/(?:works\/)?([a-z0-9-]+)(?:\/|\.)/);
+    return m && SLUG[m[1]] ? { key: SLUG[m[1]], slug: m[1] } : null;
+  }
   var money = function (n) { return '$' + n.toLocaleString('en-US', { minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 }); };
   function parts(p) { var a = Math.ceil(p * 100 / 3) / 100; a = Math.round(a * 100) / 100; var last = Math.round((p - 2 * a) * 100) / 100; return [a, a, last]; }
   function addMonths(d, m) { var x = new Date(d); var day = x.getDate(); x.setMonth(x.getMonth() + m); if (x.getDate() < day) x.setDate(0); return x; }
@@ -56,7 +72,9 @@
     '.kmb-go{display:block;text-align:center;background:var(--r);color:#fff!important;text-decoration:none!important;padding:16px;border-radius:14px;font-size:17px;font-weight:600;margin-top:4px}.kmb-go:hover{filter:brightness(1.08)}' +
     '.kmb-f{margin:0;font-size:12.5px;color:var(--m)}.kmb-f a{color:inherit}' +
     '@media (max-width:720px){.kmb{place-items:end center;padding:0}.kmb-s{grid-template-columns:1fr;border-radius:24px 24px 0 0;max-height:94dvh}.kmb-a{padding:16px}.kmb-a img{max-height:200px}.kmb-b{padding:22px 20px calc(22px + env(safe-area-inset-bottom))}.kmb h2{font-size:26px}}' +
-    '.km-plan-btn{cursor:pointer}' +
+    '.km-plan-btn{cursor:pointer}img[data-km-buy]{cursor:pointer}' +
+    '.kmb-more{margin:0;display:flex;flex-wrap:wrap;gap:8px 18px;font-size:14.5px}.kmb-more:empty{display:none}.kmb-more a,.kmb-more button{color:var(--r);background:none;border:0;padding:0;font:inherit;cursor:pointer;text-decoration:none}.kmb-more a:hover,.kmb-more button:hover{text-decoration:underline}' +
+    '.kmb.one fieldset,.kmb.one ol{display:none}' +
     '@media (prefers-reduced-motion:reduce){.kmb,.kmb-s{animation:none}}';
   var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
 
@@ -69,6 +87,7 @@
       '<label><input type="radio" name="kmb-m" value="full"><b>Pay in full</b><span class="amt" data-x="full"></span><small data-x="fulls"></small></label>' +
       '<label><input type="radio" name="kmb-m" value="plan"><b>Pay in 3</b><span class="amt" data-x="plan"></span><small>Three monthly payments. No interest, no fees.</small></label>' +
       '</fieldset><ol data-x="sched"></ol><ul data-x="notes"></ul><a class="kmb-go" target="_blank" rel="noopener"></a>' +
+      '<p class="kmb-more" data-x="more"></p>' +
       '<p class="kmb-f">Original art is final sale for change of mind; damaged or misdescribed work is always made right (<a href="returns.html">returns policy</a>). Questions? <a href="mailto:' + MAIL + '">' + MAIL + '</a></p></div></div>';
     document.body.appendChild(root);
     root.addEventListener('click', function (e) { if (e.target === root || e.target.closest('.kmb-x')) close(); });
@@ -77,8 +96,17 @@
   }
   var cur;
   function q(x) { return root.querySelector('[data-x="' + x + '"]'); }
+  function renderOther(w) {
+    var go = root.querySelector('.kmb-go'), notes = q('notes');
+    root.classList.add('one');
+    if (w.other === 'saatchi') { notes.innerHTML = '<li>This original is offered through Saatchi Art, which handles checkout and shipping.</li>'; go.href = w.url; go.target = '_blank'; go.textContent = 'Buy on Saatchi Art · ' + money(w.p) + ' ↗'; }
+    else if (w.other === 'reserve') { notes.innerHTML = '<li>A major original, reserved by email and invoiced for card or bank transfer.</li><li>Ships free and insured in the US with a signed certificate of authenticity.</li>'; go.href = mailto('Reserve: ' + w.t, 'Hi Kimberly,\n\nI would like to reserve ' + w.t + '. Please send me the price and an invoice.\n\nName:\nCity, State:\nPhone (optional):\n'); go.removeAttribute('target'); go.textContent = 'Ask about price & reserve'; }
+    else { notes.innerHTML = '<li>A one-of-a-kind piece of functional art. Ask Kimberly about delivery and details.</li>'; go.href = mailto('Inquiry: ' + w.t, 'Hi Kimberly,\n\nI am interested in ' + w.t + ' (' + money(w.p) + '). Could you tell me more about delivery?\n\nName:\nCity, State:\n'); go.removeAttribute('target'); go.textContent = 'Ask about ' + w.t; }
+  }
   function render() {
-    var w = WORKS[cur], mode = root.querySelector('input:checked').value, ps = parts(w.p), today = new Date();
+    var w = WORKS[cur]; if (w.other) return renderOther(w);
+    root.classList.remove('one');
+    var mode = root.querySelector('input:checked').value, ps = parts(w.p), today = new Date();
     q('full').textContent = money(w.p);
     q('plan').textContent = money(ps[0]) + '/mo';
     q('fulls').textContent = w.invoice ? 'Invoiced for card or bank transfer.' : 'One secure payment by card or bank transfer.';
@@ -103,18 +131,39 @@
       else { go.href = mailto('Pay in 3: ' + w.t, 'Hi Kimberly,\n\nI would like to buy ' + w.t + ' (' + money(w.p) + ') with Pay in 3: ' + money(ps[0]) + ' today, then ' + money(ps[1]) + ' and ' + money(ps[2]) + ' monthly, no interest or fees. Please send my first payment link.\n\nName:\nCity, State:\nPhone (optional):\n'); go.removeAttribute('target'); go.textContent = 'Start Pay in 3 · ' + money(ps[0]) + ' today'; }
     }
   }
-  function open(k, mode) {
+  function open(k, mode, extra) {
     if (!root) build();
     cur = k; var w = WORKS[k]; last = document.activeElement;
+    var more = q('more'); more.innerHTML = '';
+    if (extra && extra.page) { var a = document.createElement('a'); a.href = extra.page; a.textContent = 'See details & more photos ›'; more.appendChild(a); }
+    if (extra && extra.viewer) { var b = document.createElement('button'); b.type = 'button'; b.textContent = 'See it larger: room view & close-ups ›'; b.addEventListener('click', function () { close(); bypass = true; extra.viewer.click(); bypass = false; }); more.appendChild(b); }
     var im = root.querySelector('.kmb-a img'); im.src = w.img; im.alt = w.t;
     root.querySelector('#kmb-t').textContent = w.t;
-    root.querySelector('.kmb-p').textContent = 'One-of-a-kind original · ' + money(w.p);
-    root.querySelector('input[value="' + (mode === 'plan' ? 'plan' : 'full') + '"]').checked = true;
+    root.querySelector('.kmb-p').textContent = 'One-of-a-kind original · ' + (w.p ? money(w.p) : 'Price on request');
+    if (!w.other) root.querySelector('input[value="' + (mode === 'plan' ? 'plan' : 'full') + '"]').checked = true;
     render(); root.hidden = false; document.documentElement.style.overflow = 'hidden';
     root.querySelector('.kmb-x').focus();
   }
   function close() { root.hidden = true; document.documentElement.style.overflow = ''; if (last && last.focus) last.focus(); }
   window.KMBuy = { open: open, works: WORKS };
+  var bypass = false;
+  function buyableImg(img) {
+    if (!img || img.tagName !== 'IMG' || (root && root.contains(img))) return null;
+    if (img.closest('.kmv-row, .kmv, .tile, nav, header.site, .no-buy')) return null;
+    return imgKey(img);
+  }
+  document.addEventListener('click', function (e) {
+    if (bypass || e.button || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    var img = e.target.closest && e.target.closest('img'); var hit = buyableImg(img); if (!hit) return;
+    e.preventDefault(); e.stopPropagation();
+    var here = location.pathname.replace(/\/$/, '').split('/').pop().replace(/\.html$/, '');
+    var extra = {};
+    if (PAGES[hit.slug] && here !== hit.slug) extra.page = hit.slug + '.html';
+    if (img.closest('.product .image')) extra.viewer = img;
+    open(hit.key, 'full', extra);
+  }, true);
+  function markImages() { [].forEach.call(document.querySelectorAll('img'), function (img) { if (!img.hasAttribute('data-km-buy') && buyableImg(img)) { img.setAttribute('data-km-buy', ''); if (!img.title) img.title = 'Click for buying options'; } }); }
+  try { new MutationObserver(function () { markImages(); }).observe(document.documentElement, { childList: true, subtree: true }); } catch (e) {}
 
   document.addEventListener('click', function (e) {
     if (e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey) return;
@@ -134,5 +183,6 @@
       if (/^Buy now$/.test(a.textContent.trim())) a.textContent = 'Buy · ' + money(WORKS[k].p);
     });
   }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', addPlanButtons); else addPlanButtons();
+  function ready() { addPlanButtons(); markImages(); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ready); else ready();
 })();
