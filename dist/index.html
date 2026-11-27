@@ -406,7 +406,7 @@ document.querySelectorAll('#xlist .xr[data-end]').forEach(r=>{if(now<=new Date(r
 /* scroll reveal */
 const rs=[...document.querySelectorAll('.rise')];
 function reveal(){const lim=innerHeight*.94;for(let i=rs.length-1;i>=0;i--){const r=rs[i].getBoundingClientRect();if(r.height&&r.top<lim){rs[i].classList.add('in');rs.splice(i,1);}}}
-let rq=false;addEventListener('scroll',()=>{if(!rq){rq=true;requestAnimationFrame(()=>{rq=false;reveal();});}},{passive:true});
+addEventListener('scroll',reveal,{passive:true});setTimeout(reveal,600);
 addEventListener('resize',reveal);addEventListener('load',reveal);reveal();
 window.kmReveal=reveal;
 
